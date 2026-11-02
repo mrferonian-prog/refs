@@ -1,0 +1,1928 @@
+<!doctype html>
+<html data-mode="public" lang="ru"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Refbase — референсы</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&amp;family=Unbounded:wght@500;600&amp;display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#E8E9EC; --panel:#F3F4F6; --surface:#FFFFFF; --ink:#15171C; --ink-2:#474C56; --muted:#7A808B;
+  --line:#D2D5DB; --line-2:#E3E5E9; --accent:#2B3BFF; --accent-ink:#FFFFFF; --accent-soft:#E2E5FF;
+  --danger:#D3342B; --ok:#1E8A4C; --table:#1C1E23;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#131418; --panel:#191B20; --surface:#22252B; --ink:#ECEDF0; --ink-2:#B8BCC5; --muted:#858A95;
+    --line:#32353C; --line-2:#292C32; --accent:#7380FF; --accent-ink:#0E0F12; --accent-soft:#252A52;
+    --danger:#FF5A50; --ok:#4CC782; --table:#0E0F12; color-scheme:dark;
+  }
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--ink);font:14px/1.45 Onest,system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+body.noscroll{overflow:hidden}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+a{color:inherit}
+svg{flex:none}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+[hidden]{display:none!important}
+
+.app{display:grid;grid-template-columns:264px 1fr;height:100vh}
+.side{background:var(--panel);border-right:1px solid var(--line);overflow:auto;display:flex;flex-direction:column;padding:18px 12px 14px}
+.main{display:flex;flex-direction:column;min-width:0;height:100vh}
+.top{display:flex;align-items:center;gap:10px;padding:12px 28px;border-bottom:1px solid var(--line)}
+.content{flex:1;overflow:auto;padding:4px 28px 80px}
+
+.logo{display:flex;align-items:center;gap:9px;padding:2px 8px 16px;font:600 17px/1 Unbounded,sans-serif;letter-spacing:-.01em}
+.logo em{font:500 11px Onest,sans-serif;color:var(--muted);font-style:normal;margin-left:auto;border:1px solid var(--line);border-radius:6px;padding:3px 6px}
+.seg{display:grid;grid-template-columns:1fr 1fr;background:var(--line-2);border-radius:9px;padding:3px}
+.seg button{border:0;background:none;padding:7px 6px;border-radius:7px;color:var(--ink-2);font-weight:500}
+.seg button.on{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.sec{margin-top:22px}
+.sec-h{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted);font-weight:500;padding:0 8px 5px}
+.sec-h button{border:0;background:none;color:var(--muted);font-size:18px;line-height:1;padding:0 5px;border-radius:5px}
+.sec-h button:hover{color:var(--ink);background:var(--line-2)}
+.item{display:flex;align-items:center;gap:8px;width:100%;border:0;background:none;padding:6px 8px;border-radius:7px;text-align:left;color:var(--ink-2);min-height:32px}
+.item:hover{background:var(--line-2)}
+.item.on{background:var(--surface);color:var(--ink);font-weight:500;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+.item .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.item .n{margin-left:auto;color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums}
+.item .ed{display:none;color:var(--muted);border-radius:5px;padding:1px}
+.item:hover .ed{display:inline-flex}
+.item:hover .ed + .n,.item .ed:hover{color:var(--ink)}
+.item.zero{color:var(--muted)}
+.item.drop,.folder.drop .cover{outline:2px dashed var(--accent);outline-offset:-2px;background:var(--accent-soft)}
+.side-empty{font-size:12px;color:var(--muted);padding:2px 8px;line-height:1.5}
+.facet{margin:14px 8px 0}
+.facet-t{font-size:12px;color:var(--muted);margin-bottom:6px;display:flex;justify-content:space-between}
+.facet-t button{border:0;background:none;color:var(--muted);font-size:12px;padding:0}
+.facet-t button:hover{color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:5px}
+.chip{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:2px 9px;font-size:12px;line-height:18px;color:var(--ink-2);cursor:pointer;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.chip:hover{border-color:var(--ink-2);color:var(--ink)}
+.chip.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.chip small{color:var(--muted);font-size:11px}
+.chip.on small{color:inherit;opacity:.75}
+.chip .x{font-style:normal;opacity:.55;margin-right:-3px;padding:0 2px}
+.chip .x:hover{opacity:1}
+.queue{margin-top:auto;padding:16px 8px 0;font-size:12px;color:var(--muted);display:flex;gap:8px;align-items:center}
+
+.burger{display:none}
+.search{flex:1;max-width:560px;position:relative;display:flex;align-items:center}
+.search svg{position:absolute;left:11px;color:var(--muted);pointer-events:none}
+.search input{width:100%;height:38px;border:1px solid var(--line);border-radius:9px;background:var(--surface);padding:0 36px 0 35px;outline:none}
+.search input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.search kbd{position:absolute;right:9px;font:500 11px Onest,sans-serif;color:var(--muted);border:1px solid var(--line);border-radius:5px;padding:1px 6px;pointer-events:none}
+.top-r{margin-left:auto;display:flex;gap:8px;align-items:center}
+.pubinfo{font-size:12px;color:var(--muted);white-space:nowrap}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;height:36px;padding:0 14px;border-radius:9px;border:1px solid var(--line);background:var(--surface);font-weight:500;white-space:nowrap;text-decoration:none;position:relative}
+.btn:hover{border-color:var(--ink-2)}
+.btn.primary{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.btn.primary:hover{opacity:.9}
+.btn.ghost{background:none;border-color:transparent}
+.btn.ghost:hover{background:var(--line-2)}
+.btn.sm{height:30px;padding:0 10px;font-size:13px;border-radius:8px}
+.btn.icon{width:36px;padding:0}
+.btn.sm.icon{width:30px}
+.btn.danger{color:var(--danger)}
+.btn:disabled{opacity:.45;cursor:default}
+.btn .dot{position:absolute;top:6px;right:6px;width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 2px var(--surface)}
+.lnk{border:0;background:none;color:var(--muted);font-size:13px;padding:0;text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--line)}
+.lnk:hover{color:var(--ink)}
+
+.phead{display:flex;align-items:center;gap:14px;padding:26px 0 16px;flex-wrap:wrap}
+.phead h1{font:600 26px/1.15 Unbounded,sans-serif;margin:0;letter-spacing:-.015em}
+.phead .cnt{color:var(--muted);font-variant-numeric:tabular-nums;padding-top:4px}
+.crumb{border:0;background:none;color:var(--muted);display:inline-flex;align-items:center;gap:2px;padding:4px 6px 4px 0;font-weight:500}
+.crumb:hover{color:var(--ink)}
+.tools{margin-left:auto;display:flex;gap:8px;align-items:center}
+.swt{display:inline-flex;align-items:center;gap:7px;font-size:13px;color:var(--ink-2);cursor:pointer;user-select:none}
+.swt input{appearance:none;width:30px;height:18px;border-radius:9px;background:var(--line);position:relative;cursor:pointer;margin:0;transition:background .15s}
+.swt input::after{content:"";position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:#fff;transition:transform .15s}
+.swt input:checked{background:var(--accent)}
+.swt input:checked::after{transform:translateX(12px)}
+select.sm{height:30px;width:auto;padding:0 8px;font-size:13px;border-radius:8px}
+.fbar{display:flex;gap:6px;flex-wrap:wrap;margin:-4px 0 16px}
+
+.grp{margin-top:10px}
+.grp-h{position:sticky;top:-4px;z-index:3;background:var(--bg);display:flex;align-items:baseline;gap:10px;padding:14px 0 12px}
+.grp-h h2{font:500 17px/1.2 Unbounded,sans-serif;margin:0;letter-spacing:-.01em}
+.grp-h span{color:var(--muted);font-size:13px;font-variant-numeric:tabular-nums}
+.grp-h .lnk{margin-left:auto}
+.grid{columns:232px;column-gap:18px}
+.card{break-inside:avoid;margin:0 0 20px;position:relative;cursor:pointer;display:block}
+.thumb{position:relative;border-radius:10px;overflow:hidden;background:var(--line-2);box-shadow:inset 0 0 0 1px rgba(0,0,0,.05)}
+.thumb img{display:block;width:100%;height:100%;object-fit:cover;object-position:top;opacity:0;transition:opacity .2s}
+.thumb img.ld{opacity:1}
+.thumb::after{content:"";position:absolute;inset:0;border-radius:10px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.06);pointer-events:none;transition:box-shadow .12s}
+.card:hover .thumb::after{box-shadow:inset 0 0 0 2px var(--ink)}
+.cmeta{padding:8px 2px 0}
+.ctitle{font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.csub{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
+.bbtn{position:absolute;top:8px;right:8px;height:30px;min-width:30px;padding:0 8px;border-radius:8px;border:0;background:rgba(255,255,255,.94);color:#15171C;display:flex;align-items:center;justify-content:center;gap:5px;font-size:12px;font-weight:600;opacity:0;transition:opacity .12s;box-shadow:0 1px 3px rgba(0,0,0,.15);z-index:2}
+.card:hover .bbtn,.bbtn.has,.bbtn:focus-visible{opacity:1}
+.ai{position:absolute;left:8px;bottom:8px;font-size:11px;font-weight:600;padding:4px 8px;border-radius:6px;background:rgba(21,23,28,.85);color:#fff;display:flex;gap:6px;align-items:center;z-index:2}
+.ai.err{background:var(--danger);color:#fff}
+.card.dragging{opacity:.35}
+.noimg{display:none}
+.thumb .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:12px;padding:12px;text-align:center}
+.spin{width:11px;height:11px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:sp .7s linear infinite;display:inline-block;flex:none}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion: reduce){.spin{animation-duration:2.4s}*{transition:none!important}}
+
+.empty{border:1.5px dashed var(--line);border-radius:16px;padding:64px 24px;text-align:center;color:var(--ink-2);margin-top:6px}
+.empty h3{font:500 18px Unbounded,sans-serif;margin:0 0 8px;color:var(--ink)}
+.empty p{margin:0 auto 20px;max-width:440px;line-height:1.55}
+.empty .row{justify-content:center}
+
+.bgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:22px 20px}
+.folder{cursor:pointer;border:0;background:none;padding:0;text-align:left;display:block}
+.cover{aspect-ratio:4/3;border-radius:12px;overflow:hidden;background:var(--line-2);display:grid;grid-template-columns:2fr 1fr;grid-template-rows:1fr 1fr;gap:2px;position:relative}
+.cover img{width:100%;height:100%;object-fit:cover;object-position:top;display:block;min-height:0;opacity:0;transition:opacity .2s}
+.cover img.ld{opacity:1}
+.cover img:first-child{grid-row:span 2}
+.cover.n1,.cover.n0{grid-template-columns:1fr;grid-template-rows:1fr}
+.cover.n1 img{grid-row:auto}
+.cover.n2{grid-template-columns:1fr 1fr;grid-template-rows:1fr}
+.cover.n2 img:first-child{grid-row:auto}
+.cover-e{display:flex;align-items:center;justify-content:center;color:var(--muted)}
+.folder:hover .cover{box-shadow:0 0 0 2px var(--ink)}
+.fname{font-weight:600;margin-top:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fcnt{color:var(--muted);font-size:12px;margin-top:1px}
+.folder.new .cover{display:flex;flex-direction:column;gap:6px;align-items:center;justify-content:center;background:none;border:1.5px dashed var(--line);color:var(--ink-2);font-weight:500}
+.folder.new:hover .cover{border-color:var(--ink-2);box-shadow:none}
+
+#layer{position:relative;z-index:40}
+.ov{position:fixed;inset:0;background:rgba(10,11,14,.55);display:flex;align-items:center;justify-content:center;z-index:50;padding:20px}
+.dlg{background:var(--surface);border-radius:16px;width:min(520px,100%);max-height:calc(100vh - 40px);overflow:auto;box-shadow:0 24px 70px rgba(0,0,0,.35);display:flex;flex-direction:column}
+.dlg.wide{width:min(720px,100%)}
+.dlg-h{display:flex;align-items:center;justify-content:space-between;padding:16px 14px 4px 22px}
+.dlg-h h3{font:600 17px/1.3 Unbounded,sans-serif;margin:0}
+.dlg-b{padding:8px 22px 18px;overflow:auto}
+.dlg-f{display:flex;justify-content:flex-end;gap:8px;padding:6px 22px 20px;flex-wrap:wrap}
+.dlg-f .grow{margin-right:auto}
+label.f{display:block;margin:14px 0 0}
+.f>span{display:block;font-size:12px;color:var(--muted);margin-bottom:5px}
+.inp{width:100%;height:38px;border:1px solid var(--line);border-radius:8px;background:var(--bg);padding:0 11px;outline:none}
+textarea.inp{height:auto;padding:9px 11px;min-height:76px;resize:vertical;line-height:1.45}
+.inp:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.hint{font-size:12px;color:var(--muted);line-height:1.55;margin-top:8px}
+.hint b{color:var(--ink-2);font-weight:600}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;background:var(--line-2);padding:1px 5px;border-radius:4px;color:var(--ink)}
+.steps{margin:6px 0 0;padding-left:20px;font-size:13px;line-height:1.6;color:var(--ink-2)}
+.steps li{margin-bottom:6px}
+.tabs{display:flex;gap:18px;border-bottom:1px solid var(--line);padding:0 22px;margin-top:6px}
+.tabs button{border:0;background:none;padding:10px 0;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px;font-weight:500}
+.tabs button.on{color:var(--ink);border-color:var(--ink)}
+.prov{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+.prov label{border:1px solid var(--line);border-radius:10px;padding:10px 12px;cursor:pointer;display:block}
+.prov label:has(input:checked){border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+.prov input{position:absolute;opacity:0;pointer-events:none}
+.prov b{display:block;font-weight:600}
+.prov small{color:var(--muted);font-size:12px}
+.chk{display:flex;align-items:center;gap:9px;margin-top:14px;cursor:pointer}
+.chk input{accent-color:var(--accent);width:16px;height:16px;margin:0}
+.box{border:1px solid var(--line-2);border-radius:10px;padding:12px 14px;margin-top:14px;background:var(--bg)}
+.srcnote{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.5}
+.result{font-size:13px;margin-top:10px;line-height:1.5}
+.result.ok{color:var(--ok)}
+.result.err{color:var(--danger)}
+.dz{border:1.5px dashed var(--line);border-radius:12px;padding:32px 16px;text-align:center;cursor:pointer;background:var(--bg);display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--ink-2)}
+.dz b{color:var(--ink);font-weight:600}
+.dz span{font-size:12px;color:var(--muted)}
+.dz:hover,.dz.over{border-color:var(--accent);background:var(--accent-soft)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}
+.prog{height:6px;background:var(--line-2);border-radius:3px;overflow:hidden;margin-top:14px}
+.prog i{display:block;height:100%;background:var(--accent);width:0;transition:width .25s}
+.log{font-size:12px;color:var(--ink-2);background:var(--bg);border-radius:8px;padding:10px 12px;max-height:170px;overflow:auto;white-space:pre-wrap;margin-top:10px;line-height:1.55}
+.stat{display:flex;gap:24px;flex-wrap:wrap;margin-top:4px}
+.stat div{font-size:12px;color:var(--muted)}
+.stat b{display:block;font:500 18px Unbounded,sans-serif;color:var(--ink)}
+
+.pop{position:fixed;z-index:70;background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:0 14px 44px rgba(0,0,0,.2);width:264px;padding:8px}
+.pop-h{font-size:12px;color:var(--muted);padding:4px 8px 6px}
+.pop-list{max-height:270px;overflow:auto}
+.pop label{display:flex;align-items:center;gap:10px;padding:7px 8px;border-radius:7px;cursor:pointer}
+.pop label:hover{background:var(--line-2)}
+.pop label span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pop input[type=checkbox]{accent-color:var(--accent);width:16px;height:16px;margin:0;flex:none}
+.pop .inp{height:34px;margin-top:6px}
+.pop-e{font-size:12px;color:var(--muted);padding:4px 8px 6px}
+
+.sheet-ov{position:fixed;inset:0;z-index:45;background:rgba(10,11,14,.72);display:flex;padding:18px}
+.sheet{flex:1;display:grid;grid-template-columns:minmax(0,1fr) 440px;background:var(--surface);border-radius:16px;overflow:hidden;min-height:0;position:relative}
+.sheet-img{background:var(--table);overflow:auto;position:relative;display:flex;justify-content:center;align-items:flex-start;padding:32px}
+.sheet-img.center{align-items:center}
+.sheet-img img{max-width:100%;height:auto;display:block;border-radius:4px;box-shadow:0 14px 50px rgba(0,0,0,.45)}
+.sheet-img .ph{color:#8A8F99;margin:auto}
+.imgcol{position:relative;min-width:0;min-height:0;display:flex}
+.imgcol .sheet-img{flex:1}
+.navb{position:absolute;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;border:0;background:rgba(255,255,255,.12);color:#fff;display:flex;align-items:center;justify-content:center;z-index:2}
+.navb:hover{background:rgba(255,255,255,.24)}
+.navb.l{left:14px}
+.navb.r{right:14px}
+.imgcol .x{position:absolute;top:14px;left:14px;z-index:3;width:40px;height:40px;border-radius:50%;border:0;background:rgba(255,255,255,.12);color:#fff}
+.imgcol .x:hover{background:rgba(255,255,255,.24)}
+.sheet-info{overflow:auto;padding:22px 26px 34px;border-left:1px solid var(--line)}
+.ttl-in,.ttl{font:600 20px/1.3 Unbounded,sans-serif;border:0;background:none;width:calc(100% - 40px);padding:4px 6px;margin:0 0 0 -6px;border-radius:7px;outline:none;letter-spacing:-.01em}
+.ttl-in:hover{background:var(--line-2)}
+.ttl-in:focus{background:var(--bg);box-shadow:0 0 0 2px var(--accent-soft)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:12px}
+.src{display:flex;align-items:center;gap:6px;margin-top:10px}
+.src .inp{height:32px;font-size:13px}
+.src a.ext{display:inline-flex;align-items:center;gap:5px;color:var(--ink-2);font-size:13px;text-decoration:none}
+.src a.ext:hover{color:var(--ink)}
+.aibar{display:flex;align-items:center;gap:10px;margin-top:16px;padding:10px 12px;border-radius:10px;background:var(--bg);font-size:12px;color:var(--muted)}
+.aibar .btn{margin-left:auto}
+.aibar.err{color:var(--danger);flex-wrap:wrap;line-height:1.45}
+.aibar.err>span{flex:1 0 100%}
+.aibar.err .btn{margin-left:0}
+.desc{margin:16px 0 0;color:var(--ink-2);line-height:1.55}
+.blk{margin-top:22px}
+.blk-h{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px;font-weight:600;font-size:13px;margin-bottom:9px}
+.blk-h .sub{font-weight:400;color:var(--muted);font-size:12px}
+.blk-h .act{margin-left:auto;display:flex;gap:10px}
+.tag-add{border:1px dashed var(--line);background:none;border-radius:999px;padding:2px 10px;font-size:12px;line-height:18px;color:var(--ink);width:104px;outline:none}
+.tag-add:focus{border-style:solid;border-color:var(--accent);width:150px}
+.font{border:1px solid var(--line-2);border-radius:10px;padding:11px 13px;margin-bottom:8px}
+.font .sample{font-size:24px;line-height:1.25;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.font .meta{font-size:12px;color:var(--muted);margin-top:2px}
+.conf{height:3px;background:var(--line-2);border-radius:2px;margin-top:8px}
+.conf i{display:block;height:100%;background:var(--ink-2);border-radius:2px}
+.alts{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;align-items:center;font-size:12px;color:var(--muted)}
+.font-acts{display:flex;gap:14px;margin-top:8px;font-size:12px}
+.font-acts a,.font-acts button{color:var(--muted);border:0;background:none;padding:0;text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--line);font-size:12px}
+.font-acts a:hover,.font-acts button:hover{color:var(--ink)}
+.strip{display:flex;height:30px;border-radius:7px;overflow:hidden;outline:1px solid var(--line);outline-offset:-1px}
+.strip button{outline:0}
+.strip button{border:0;padding:0;min-width:10px;cursor:pointer}
+.sw{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px}
+.swc{border:1px solid var(--line-2);border-radius:9px;overflow:hidden;cursor:pointer;background:var(--surface);text-align:left;padding:0}
+.swc i{display:block;height:44px;box-shadow:inset 0 -1px 0 rgba(0,0,0,.06)}
+.swc div{padding:6px 8px 7px;font-size:11px;line-height:1.35;color:var(--muted)}
+.swc b{display:block;font-weight:600;color:var(--ink);font-variant-numeric:tabular-nums}
+.ds-sec{border-top:1px solid var(--line-2);padding:13px 0 4px}
+.ds-t{font-size:12px;color:var(--muted);margin-bottom:9px;display:flex;justify-content:space-between;align-items:center}
+.ty{display:grid;grid-template-columns:76px minmax(0,1fr);gap:2px 12px;align-items:baseline;padding:6px 0}
+.ty .r{font-size:11px;color:var(--muted)}
+.ty .s{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1.25}
+.ty .m{grid-column:2;font-size:11px;color:var(--muted)}
+.boxes{display:flex;flex-wrap:wrap;gap:12px}
+.bx{display:flex;flex-direction:column;gap:6px;font-size:11px;color:var(--muted);max-width:110px}
+.bx i{display:block;width:72px;height:52px;background:var(--surface);border:1px solid var(--line)}
+.bx.sh i{border-color:transparent;background:#fff}
+.spc{display:flex;align-items:flex-end;gap:8px;flex-wrap:wrap}
+.spc div{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;color:var(--muted)}
+.spc i{display:block;background:var(--accent);opacity:.75;width:14px;border-radius:2px}
+.cmp{display:flex;flex-direction:column;gap:8px;padding:12px;border:1px solid var(--line-2);border-radius:10px;margin-bottom:8px;background:var(--bg)}
+.cmp .prev{align-self:flex-start;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cmp .d{font-size:12px;color:var(--muted);line-height:1.45}
+.cmp .k{font-size:11px;color:var(--muted)}
+.kv{display:grid;grid-template-columns:110px minmax(0,1fr);gap:5px 12px;font-size:13px;margin:0}
+.kv dt{color:var(--muted)}
+.kv dd{margin:0}
+.gridv{display:flex;gap:3px;height:34px;margin-top:8px}
+.gridv i{flex:1;background:var(--accent-soft);border:1px solid var(--accent);opacity:.7;border-radius:2px}
+.notes{margin-top:22px}
+.dfoot{display:flex;gap:8px;flex-wrap:wrap;margin-top:28px;padding-top:16px;border-top:1px solid var(--line-2)}
+.dfoot .danger{margin-left:auto}
+
+#toasts{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:90;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none}
+.toast{background:var(--ink);color:var(--bg);padding:10px 15px;border-radius:10px;font-size:13px;max-width:min(560px,90vw);box-shadow:0 8px 24px rgba(0,0,0,.22);pointer-events:auto}
+.toast.err{background:var(--danger);color:#fff}
+.veil{position:fixed;inset:10px;z-index:80;border:2px dashed var(--accent);border-radius:18px;background:color-mix(in srgb,var(--accent) 10%,transparent);display:none;align-items:center;justify-content:center;font:500 22px Unbounded,sans-serif;color:var(--accent);pointer-events:none;backdrop-filter:blur(2px)}
+.veil.show{display:flex}
+.side-bd{display:none}
+
+@media (max-width: 1100px){ .sheet{grid-template-columns:minmax(0,1fr) 380px} }
+@media (max-width: 860px){
+  .app{grid-template-columns:1fr}
+  .side{position:fixed;inset:0 auto 0 0;width:284px;z-index:30;transform:translateX(-102%);transition:transform .2s;box-shadow:0 0 40px rgba(0,0,0,.25)}
+  .side.open{transform:none}
+  .side-bd.show{display:block;position:fixed;inset:0;z-index:29;background:rgba(0,0,0,.35)}
+  .burger{display:inline-flex}
+  .top{padding:10px 14px;gap:8px}
+  .search kbd{display:none}
+  .btn .lbl{display:none}
+  .top-r .btn{width:36px;padding:0}
+  .content{padding:0 14px 70px}
+  .phead{padding:18px 0 12px}
+  .phead h1{font-size:21px}
+  .grid{columns:150px;column-gap:12px}
+  .card{margin-bottom:14px}
+  .bgrid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:16px 12px}
+  .sheet-ov{padding:0}
+  .sheet{display:block;border-radius:0;overflow:auto}
+  .imgcol{display:block}
+  .sheet-img{padding:60px 12px 16px;overflow:auto;min-height:36vh;max-height:72vh}
+  .sheet-info{border-left:0;overflow:visible;padding:18px 18px 40px}
+  .navb{display:none}
+  .imgcol .x{position:fixed;top:10px;left:auto;right:10px;background:rgba(20,22,26,.7)}
+  .prov{grid-template-columns:1fr 1fr}
+  .grid2{grid-template-columns:1fr}
+  .pubinfo{display:none}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side" id="side"></aside>
+  <div class="side-bd" id="sidebd" data-act="burger"></div>
+  <div class="main">
+    <header class="top" id="top"></header>
+    <main class="content" id="content"></main>
+  </div>
+</div>
+<div id="layer"></div>
+<div id="toasts" aria-live="polite"></div>
+<div class="veil" id="veil">Отпустите, чтобы добавить</div>
+<input type="file" id="filepick" accept="image/*" multiple="" hidden="">
+<input type="file" id="replacepick" accept="image/*" hidden="">
+<input type="file" id="importpick" accept=".json,application/json" hidden="">
+<script>
+'use strict';
+/* Refbase — библиотека дизайн-референсов. Один файл: локальная база (IndexedDB) + публикация на GitHub Pages.
+   Опубликованная копия — этот же файл с атрибутом data-mode="public" на <html>, работает только на просмотр. */
+const SOURCE_HTML = '<!doctype html>\n' + document.documentElement.outerHTML;
+const PUB = document.documentElement.getAttribute('data-mode') === 'public';
+
+/* ---------- утилиты ---------- */
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+const hostOf = u => { try { return new URL(u).hostname.replace(/^www\./, ''); } catch { return ''; } };
+const plural = (n, a, b, c) => { const m10 = n % 10, m100 = n % 100; return m10 === 1 && m100 !== 11 ? a : m10 >= 2 && m10 <= 4 && (m100 < 10 || m100 >= 20) ? b : c; };
+const nRefs = n => `${n} ${plural(n, 'референс', 'референса', 'референсов')}`;
+const fmtDate = t => new Date(t).toLocaleString('ru-RU', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' });
+const debounce = (fn, ms) => { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; };
+const enc = s => new TextEncoder().encode(s);
+const low = s => String(s || '').trim().toLowerCase();
+const rgbHex = (r, g, b) => '#' + [r, g, b].map(v => Math.round(clamp(v, 0, 255)).toString(16).padStart(2, '0')).join('').toUpperCase();
+const isHex = v => /^#([0-9a-f]{3}|[0-9a-f]{6}|[0-9a-f]{8})$/i.test(String(v || '').trim());
+function blobToDataURL(b) { return new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = () => rej(r.error); r.readAsDataURL(b); }); }
+function dataURLToBlob(u) {
+  const i = u.indexOf(','); const head = u.slice(0, i); const mime = (head.match(/data:([^;,]+)/) || [])[1] || 'application/octet-stream';
+  const bin = atob(u.slice(i + 1)); const a = new Uint8Array(bin.length);
+  for (let k = 0; k < bin.length; k++) a[k] = bin.charCodeAt(k);
+  return new Blob([a], { type: mime });
+}
+function bytesToB64(bytes) { let s = ''; const CH = 0x8000; for (let i = 0; i < bytes.length; i += CH) s += String.fromCharCode.apply(null, bytes.subarray(i, i + CH)); return btoa(s); }
+function lsGet(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } }
+function lsSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch { /* хранилище недоступно */ } }
+async function copyText(t, label) {
+  try { await navigator.clipboard.writeText(t); }
+  catch { const ta = document.createElement('textarea'); ta.value = t; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); } catch {} ta.remove(); }
+  toast(label || 'Скопировано');
+}
+function download(blob, name) {
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name;
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+}
+function toast(msg, type = '') {
+  const el = document.createElement('div'); el.className = 'toast ' + type; el.textContent = msg;
+  $('#toasts').appendChild(el); setTimeout(() => el.remove(), type === 'err' ? 7000 : 2800);
+}
+const extOf = mime => ({ 'image/webp': 'webp', 'image/jpeg': 'jpg', 'image/png': 'png', 'image/gif': 'gif' }[mime] || 'jpg');
+
+const I = {
+  logo: '<svg width="20" height="20" viewBox="0 0 20 20"><rect x="1" y="1" width="8" height="11" rx="2" fill="currentColor"/><rect x="11" y="1" width="8" height="6" rx="2" fill="currentColor" opacity=".45"/><rect x="11" y="9" width="8" height="10" rx="2" fill="currentColor" opacity=".75"/><rect x="1" y="14" width="8" height="5" rx="2" fill="currentColor" opacity=".3"/></svg>',
+  search: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>',
+  plus: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
+  folder: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>',
+  gear: '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>',
+  upload: '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V4m0 0-4 4m4-4 4 4"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>',
+  close: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>',
+  left: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>',
+  right: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>',
+  link: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg>',
+  ext: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>',
+  globe: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.8 3.8 5.8 3.8 9s-1.3 6.2-3.8 9c-2.5-2.8-3.8-5.8-3.8-9S9.5 5.8 12 3z"/></svg>',
+  menu: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>',
+  dots: '<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg>',
+  spark: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z"/></svg>',
+};
+
+/* ---------- IndexedDB ---------- */
+const DB = {
+  db: null,
+  open() {
+    return new Promise((res, rej) => {
+      const r = indexedDB.open('refbase', 1);
+      r.onupgradeneeded = () => { const d = r.result; d.createObjectStore('refs', { keyPath: 'id' }); d.createObjectStore('boards', { keyPath: 'id' }); d.createObjectStore('files'); d.createObjectStore('meta'); };
+      r.onsuccess = () => { this.db = r.result; res(); };
+      r.onerror = () => rej(r.error);
+    });
+  },
+  tx(store, mode, fn) {
+    return new Promise((res, rej) => {
+      const t = this.db.transaction(store, mode); const s = t.objectStore(store); let out;
+      const r = fn(s); if (r) r.onsuccess = () => { out = r.result; };
+      t.oncomplete = () => res(out); t.onerror = () => rej(t.error); t.onabort = () => rej(t.error || new Error('Транзакция прервана'));
+    });
+  },
+  all(store) { return this.tx(store, 'readonly', s => s.getAll()); },
+  get(store, key) { return this.tx(store, 'readonly', s => s.get(key)); },
+  put(store, val, key) { return this.tx(store, 'readwrite', s => key === undefined ? s.put(val) : s.put(val, key)); },
+  del(store, key) { return this.tx(store, 'readwrite', s => s.delete(key)); },
+  clear(store) { return this.tx(store, 'readwrite', s => s.clear()); },
+};
+
+/* ---------- состояние ---------- */
+const DEFAULT_TYPES = ['Сайты и лендинги', 'Мобильные приложения', 'Веб-интерфейсы и дашборды', 'Брендинг и айдентика', 'Логотипы', 'Постеры и печать', 'Упаковка', 'Презентации', 'Соцсети и баннеры', 'Иллюстрации', 'Типографика', '3D и моушн']
+  .map((name, i) => ({ id: 't' + i, name }));
+const DEFAULT_SETTINGS = {
+  provider: 'claude', claudeKey: '', claudeModel: 'claude-sonnet-5-5', openaiKey: '', openaiModel: 'gpt-5.5',
+  ollamaHost: 'http://localhost:11434', ollamaModel: 'qwen3-vl:8b', autoAnalyze: true, lang: 'ru', webFetch: true,
+  customName: '', customFormat: 'openai', customBase: '', customKey: '', customModel: '', customProxy: '',
+  gh: { token: '', repo: 'refs', branch: 'main', owner: '', lastAt: 0, url: '', partial: false },
+};
+const S = {
+  refs: [], boards: [], types: [], settings: structuredClone(DEFAULT_SETTINGS), lastChange: 0,
+  view: 'library', type: 'all', boardId: null, q: '', filters: [], group: true, sort: 'new',
+  openId: null, facetOpen: {}, queue: [], running: 0, pub: null,
+};
+const refById = id => S.refs.find(r => r.id === id);
+const typeById = id => S.types.find(t => t.id === id);
+const boardById = id => S.boards.find(b => b.id === id);
+const typeName = id => typeById(id)?.name || 'Без типа';
+
+function normalizeRef(r) {
+  r.tags = r.tags || {}; for (const k of ['style', 'direction', 'keywords']) r.tags[k] = Array.isArray(r.tags[k]) ? r.tags[k] : [];
+  r.fonts = Array.isArray(r.fonts) ? r.fonts : []; r.boards = Array.isArray(r.boards) ? r.boards : [];
+  r.palette = Array.isArray(r.palette) ? r.palette : []; r.ai = r.ai || { status: 'none' };
+  if (!r.cover) r.cover = isPageLink(r) ? 'link' : 'upload';
+  r.title = r.title || 'Без названия'; r.url = r.url || ''; r.description = r.description || ''; r.notes = r.notes || '';
+  return r;
+}
+function markChanged() { S.lastChange = Date.now(); if (!PUB) DB.put('meta', S.lastChange, 'lastChange'); renderPubDot(); }
+async function saveRef(r) { r.updatedAt = Date.now(); await DB.put('refs', r); markChanged(); }
+async function saveBoard(b) { await DB.put('boards', b); markChanged(); }
+async function saveTypes() { await DB.put('meta', S.types, 'types'); markChanged(); }
+const saveSettings = debounce(() => DB.put('meta', S.settings, 'settings'), 250);
+const getFile = (id, kind) => PUB ? Promise.resolve(null) : DB.get('files', id + ':' + kind);
+const putFile = (id, kind, blob) => DB.put('files', blob, id + ':' + kind);
+const FILE_KINDS = ['orig', 'web', 'thumb', 'user', 'deep'];
+async function delFiles(id) { for (const k of FILE_KINDS) await DB.del('files', id + ':' + k); }
+
+/* ---------- изображения ---------- */
+async function loadBitmap(blob) {
+  try { return await createImageBitmap(blob); } catch { /* fallback ниже */ }
+  const url = URL.createObjectURL(blob);
+  try {
+    return await new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = () => rej(new Error('Не удалось прочитать изображение')); i.src = url; });
+  } finally { setTimeout(() => URL.revokeObjectURL(url), 2000); }
+}
+const dimsOf = b => ({ w: b.width || b.naturalWidth, h: b.height || b.naturalHeight });
+function canvasFrom(src, sx, sy, sw, sh, dw, dh, bg) {
+  const c = document.createElement('canvas'); c.width = Math.max(1, Math.round(dw)); c.height = Math.max(1, Math.round(dh));
+  const x = c.getContext('2d'); if (bg) { x.fillStyle = bg; x.fillRect(0, 0, c.width, c.height); }
+  x.imageSmoothingQuality = 'high'; x.drawImage(src, sx, sy, sw, sh, 0, 0, c.width, c.height); return c;
+}
+const toBlob = (c, type, q) => new Promise(r => c.toBlob(r, type, q));
+async function encodeImg(c, q = 0.82) {
+  let b = await toBlob(c, 'image/webp', q);
+  if (!b || b.type !== 'image/webp') {
+    const c2 = canvasFrom(c, 0, 0, c.width, c.height, c.width, c.height, '#FFFFFF');
+    b = await toBlob(c2, 'image/jpeg', q);
+  }
+  return b;
+}
+function extractPalette(src, w, h) {
+  const s = Math.min(1, 110 / Math.max(w, h));
+  let d; try { d = canvasFrom(src, 0, 0, w, h, Math.max(1, w * s), Math.max(1, h * s)).getContext('2d').getImageData(0, 0, Math.max(1, Math.round(w * s)), Math.max(1, Math.round(h * s))).data; } catch { return []; }
+  const m = new Map(); let n = 0;
+  for (let i = 0; i < d.length; i += 4) {
+    if (d[i + 3] < 128) continue;
+    const k = (d[i] >> 3) << 10 | (d[i + 1] >> 3) << 5 | (d[i + 2] >> 3);
+    const e = m.get(k); if (e) { e.c++; e.r += d[i]; e.g += d[i + 1]; e.b += d[i + 2]; } else m.set(k, { c: 1, r: d[i], g: d[i + 1], b: d[i + 2] });
+    n++;
+  }
+  if (!n) return [];
+  const arr = [...m.values()].map(e => ({ r: e.r / e.c, g: e.g / e.c, b: e.b / e.c, c: e.c })).sort((a, b) => b.c - a.c);
+  const out = [];
+  for (const e of arr) {
+    const near = out.find(o => Math.hypot(o.r - e.r, o.g - e.g, o.b - e.b) < 34);
+    if (near) { near.c += e.c; continue; }
+    if (out.length >= 8 || e.c / n < 0.003) continue;
+    out.push({ ...e });
+  }
+  return out.sort((a, b) => b.c - a.c).map(e => ({ hex: rgbHex(e.r, e.g, e.b), p: Math.max(1, Math.round(e.c / n * 100)) }));
+}
+async function processImage(blob) {
+  const bmp = await loadBitmap(blob); const { w, h } = dimsOf(bmp);
+  if (!w || !h) throw new Error('Пустое изображение');
+  const s = Math.min(1, 1400 / w, 12000 / h);
+  const web = await encodeImg(canvasFrom(bmp, 0, 0, w, h, w * s, h * s), 0.82);
+  const tw = Math.min(480, w), ts = tw / w, srcH = Math.min(h, (tw * 1.6) / ts);
+  const tc = canvasFrom(bmp, 0, 0, w, srcH, tw, srcH * ts);
+  const thumb = await encodeImg(tc, 0.8);
+  const palette = extractPalette(bmp, w, h);
+  if (bmp.close) bmp.close();
+  return { orig: blob.size <= 15e6 ? blob : web, web, thumb, w, h, tw: tc.width, th: tc.height, palette };
+}
+async function jpegPart(c) { const b = await toBlob(c, 'image/jpeg', 0.86); return { mime: 'image/jpeg', data: (await blobToDataURL(b)).split(',')[1] }; }
+/* Картинка → части для нейросети: длинные скриншоты режем на вертикальные фрагменты, чтобы мелкий текст оставался читаемым. */
+async function blobParts(blob, maxTiles = 4) {
+  const bmp = await loadBitmap(blob); const { w, h } = dimsOf(bmp); const out = [];
+  if (h / w <= 2.2 || maxTiles <= 1) {
+    const sh = maxTiles <= 1 ? Math.min(h, w * 2.2) : h; const s = Math.min(1, 1568 / Math.max(w, sh));
+    out.push(await jpegPart(canvasFrom(bmp, 0, 0, w, sh, w * s, sh * s, '#FFFFFF')));
+  } else {
+    const tw = Math.min(w, 1200), s = tw / w, tileH = (tw * 1.4) / s, n = Math.ceil(h / tileH);
+    let idx = [...Array(n).keys()];
+    if (n > maxTiles) idx = [...new Set(Array.from({ length: maxTiles }, (_, k) => Math.round(k * (n - 1) / (maxTiles - 1))))];
+    for (const i of idx) { const sy = i * tileH, sh = Math.min(tileH, h - sy); out.push(await jpegPart(canvasFrom(bmp, 0, sy, w, sh, tw, sh * s, '#FFFFFF'))); }
+  }
+  if (bmp.close) bmp.close();
+  return out;
+}
+/* Материалы для анализа. Со ссылкой: первый экран страницы, длинный кадр страницы, затем скриншот пользователя.
+   Без ссылки: только скриншот пользователя. Возвращает части и их описание для промпта. */
+async function aiImages(ref) {
+  const parts = [], manifest = [];
+  const add = (list, what) => {
+    if (!list.length) return;
+    const a = parts.length + 1, z = parts.length + list.length; parts.push(...list);
+    manifest.push(`${a === z ? 'Image ' + a : 'Images ' + a + '–' + z}: ${what}`);
+  };
+  if (isPageLink(ref)) {
+    const cover = await getFile(ref.id, 'orig');
+    if (cover) add(await blobParts(cover, 1), 'automatic screenshot of the first screen of the URL (1440×900 viewport)');
+    else if (ref.remote) add([{ url: ref.remote }], 'automatic screenshot of the first screen of the URL (1440×900 viewport)');
+    const deep = await getFile(ref.id, 'deep');
+    if (deep) add(await blobParts(deep, 3), 'a taller capture of the same page, consecutive slices top to bottom');
+    else if (ref.deepRemote) add([{ url: ref.deepRemote }], 'a taller capture of the same page');
+    const user = await getFile(ref.id, 'user');
+    if (user) add(await blobParts(user, 3), 'a screenshot saved by the user — supporting material only');
+  } else {
+    const blob = (await getFile(ref.id, 'orig')) || (await getFile(ref.id, 'web'));
+    if (blob) { const p = await blobParts(blob, 4); add(p, p.length > 1 ? 'the user\'s screenshot, consecutive vertical slices of ONE long image, top to bottom' : 'the user\'s screenshot'); }
+    else if (ref.remote) add([{ url: ref.remote }], 'the reference image');
+  }
+  if (!parts.length) throw new Error('Нет изображения для анализа');
+  return { parts, manifest };
+}
+
+/* URL картинок с кэшем */
+const thumbCache = new Map();
+let fullURL = null;
+async function thumbSrc(ref) {
+  if (thumbCache.has(ref.id)) return thumbCache.get(ref.id);
+  let u = null;
+  if (PUB) u = await pubThumb(ref);
+  else { const b = await getFile(ref.id, 'thumb'); u = b ? URL.createObjectURL(b) : (ref.remote || null); }
+  thumbCache.set(ref.id, u); return u;
+}
+function dropThumb(id) { const u = thumbCache.get(id); if (u && u.startsWith('blob:')) URL.revokeObjectURL(u); thumbCache.delete(id); }
+async function fullSrc(ref) {
+  if (PUB) return ref.f ? ref.f + '?v=' + S.pub.v : (await thumbSrc(ref));
+  const b = (await getFile(ref.id, 'orig')) || (await getFile(ref.id, 'web'));
+  if (!b) return ref.remote || (await thumbSrc(ref));
+  if (fullURL) URL.revokeObjectURL(fullURL);
+  fullURL = URL.createObjectURL(b); return fullURL;
+}
+const io = new IntersectionObserver(es => {
+  for (const e of es) if (e.isIntersecting) {
+    io.unobserve(e.target); const r = refById(e.target.dataset.img); if (!r) continue;
+    thumbSrc(r).then(u => {
+      if (!u) { e.target.closest('.thumb')?.insertAdjacentHTML('beforeend', '<div class="ph">Нет изображения</div>'); return; }
+      e.target.onload = () => e.target.classList.add('ld'); e.target.onerror = () => { e.target.classList.add('noimg'); e.target.closest('.thumb')?.insertAdjacentHTML('beforeend', '<div class="ph">Превью не загрузилось — откройте карточку и вставьте скриншот</div>'); }; e.target.src = u;
+    });
+  }
+}, { rootMargin: '700px' });
+const observeImgs = root => $$('img[data-img]', root).forEach(i => io.observe(i));
+
+/* Google Fonts для превью найденных шрифтов */
+const loadedFonts = new Set();
+const cssFont = n => String(n || '').replace(/['"\\;<>{}()]/g, '').trim();
+function loadFont(name) {
+  const n = cssFont(name); if (!n || loadedFonts.has(n)) return; loadedFonts.add(n);
+  const l = document.createElement('link'); l.rel = 'stylesheet';
+  l.href = 'https://fonts.googleapis.com/css2?family=' + encodeURIComponent(n).replace(/%20/g, '+') + '&display=swap';
+  document.head.appendChild(l);
+}
+const fontFallback = c => /serif/i.test(c) && !/sans/i.test(c) ? 'Georgia, serif' : /mono/i.test(c) ? 'ui-monospace, monospace' : /script|hand/i.test(c) ? 'cursive' : 'system-ui, sans-serif';
+
+/* ---------- выборка и фильтры ---------- */
+const FACETS = [['style', 'Стиль'], ['direction', 'Графика'], ['font', 'Шрифты'], ['keywords', 'Теги']];
+function refValues(r, k) {
+  if (k === 'font') return (r.fonts || []).map(f => f.name);
+  return r.tags?.[k] || [];
+}
+function matchFilter(r, f) {
+  if (f.k === 'noboard') return !r.boards.length;
+  const v = low(f.v); return refValues(r, f.k).some(x => low(x) === v);
+}
+function haystack(r) {
+  return low([r.title, r.description, r.url, typeName(r.type), ...r.tags.style, ...r.tags.direction, ...r.tags.keywords,
+    ...r.fonts.map(f => f.name), ...(r.ds?.colors || []).map(c => c.hex + ' ' + (c.name || ''))].join(' '));
+}
+function scopeRefs() {
+  let list = S.refs;
+  if (S.view === 'board') list = list.filter(r => r.boards.includes(S.boardId));
+  else if (S.view === 'library') {
+    if (S.type === 'none') list = list.filter(r => !typeById(r.type));
+    else if (S.type !== 'all') list = list.filter(r => r.type === S.type);
+  }
+  if (S.q.trim()) { const qs = low(S.q).split(/\s+/).filter(Boolean); list = list.filter(r => { const h = haystack(r); return qs.every(q => h.includes(q)); }); }
+  return list;
+}
+function visibleRefs() {
+  let list = scopeRefs();
+  for (const f of S.filters) list = list.filter(r => matchFilter(r, f));
+  list = [...list];
+  if (S.sort === 'old') list.sort((a, b) => a.createdAt - b.createdAt);
+  else if (S.sort === 'title') list.sort((a, b) => a.title.localeCompare(b.title, 'ru'));
+  else list.sort((a, b) => b.createdAt - a.createdAt);
+  return list;
+}
+function facetData(list) {
+  const out = {};
+  for (const [k] of FACETS) {
+    const m = new Map();
+    for (const r of list) for (const v of refValues(r, k)) { const key = low(v); const e = m.get(key) || { v, n: 0 }; e.n++; m.set(key, e); }
+    out[k] = [...m.values()].sort((a, b) => b.n - a.n || a.v.localeCompare(b.v, 'ru'));
+  }
+  return out;
+}
+const isActive = (k, v) => S.filters.some(f => f.k === k && low(f.v) === low(v));
+function toggleFilter(k, v) {
+  if (isActive(k, v)) S.filters = S.filters.filter(f => !(f.k === k && low(f.v) === low(v)));
+  else S.filters.push({ k, v });
+  renderSide(); renderContent();
+}
+
+/* ---------- отрисовка ---------- */
+function render() { renderSide(); renderContent(); }
+function renderSide() {
+  const cnt = {}; let none = 0;
+  for (const r of S.refs) { if (typeById(r.type)) cnt[r.type] = (cnt[r.type] || 0) + 1; else none++; }
+  const bc = {}; for (const r of S.refs) for (const b of r.boards) bc[b] = (bc[b] || 0) + 1;
+  const lib = S.view === 'library';
+  const item = (id, name, n, editable) => `<button class="item ${lib && S.type === id ? 'on' : ''} ${n ? '' : 'zero'}" data-act="type" data-id="${id}"><span class="nm">${esc(name)}</span>${editable && !PUB ? `<span class="ed" data-act="type-edit" data-id="${id}" title="Переименовать или удалить">${I.dots}</span>` : ''}<span class="n">${n}</span></button>`;
+  let h = `<div class="logo">${I.logo}<span>refbase</span>${PUB ? '<em>просмотр</em>' : ''}</div>
+  <div class="seg"><button data-act="nav-library" class="${lib ? 'on' : ''}">Библиотека</button><button data-act="nav-boards" class="${lib ? '' : 'on'}">Доски</button></div>
+  <div class="sec"><div class="sec-h"><span>Типы материалов</span>${PUB ? '' : '<button data-act="type-add" title="Добавить тип">+</button>'}</div>
+  ${item('all', 'Все референсы', S.refs.length)}
+  ${S.types.filter(t => !PUB || cnt[t.id]).map(t => item(t.id, t.name, cnt[t.id] || 0, true)).join('')}
+  ${none ? item('none', 'Без типа', none) : ''}</div>
+  <div class="sec"><div class="sec-h"><span>Доски</span>${PUB ? '' : '<button data-act="board-add" title="Новая доска">+</button>'}</div>
+  ${S.boards.length ? S.boards.map(b => `<button class="item ${S.view === 'board' && S.boardId === b.id ? 'on' : ''}" data-act="board-open" data-id="${b.id}" data-drop-board="${b.id}">${I.folder}<span class="nm">${esc(b.name)}</span><span class="n">${bc[b.id] || 0}</span></button>`).join('')
+    : `<div class="side-empty">${PUB ? 'Досок пока нет' : 'Создайте доску и перетаскивайте на неё карточки'}</div>`}</div>`;
+  if (S.view !== 'boards') {
+    const fd = facetData(visibleRefs());
+    let fh = '';
+    for (const [k, label] of FACETS) {
+      let vals = fd[k]; if (!vals.length) continue;
+      const open = S.facetOpen[k]; const shown = open ? vals.slice(0, 80) : vals.slice(0, 10);
+      for (const f of S.filters) if (f.k === k && !shown.some(s => low(s.v) === low(f.v))) shown.unshift({ v: f.v, n: 0 });
+      fh += `<div class="facet"><div class="facet-t"><span>${label}</span>${vals.length > 10 ? `<button data-act="facet-more" data-k="${k}">${open ? 'Свернуть' : 'Ещё ' + (vals.length - 10)}</button>` : ''}</div><div class="chips">${shown.map(v => `<button class="chip ${isActive(k, v.v) ? 'on' : ''}" data-act="filter" data-k="${k}" data-v="${esc(v.v)}" title="${esc(v.v)}">${esc(v.v)}${v.n ? ` <small>${v.n}</small>` : ''}</button>`).join('')}</div></div>`;
+    }
+    if (fh) h += `<div class="sec"><div class="sec-h"><span>Фильтры</span>${S.filters.length ? '<button data-act="filter-clear" title="Сбросить фильтры" style="font-size:12px">Сбросить</button>' : ''}</div>${fh}</div>`;
+  }
+  h += `<div class="queue" id="queue"></div>`;
+  $('#side').innerHTML = h;
+  renderQueue();
+}
+function renderQueue() {
+  const el = $('#queue'); if (!el) return;
+  const n = S.queue.length + S.running;
+  const paused = (S.pauseUntil || 0) > Date.now();
+  el.innerHTML = n ? `<i class="spin"></i>Анализ: ${n} ${plural(n, 'референс', 'референса', 'референсов')} ${paused ? `ждут до ${new Date(S.pauseUntil).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })}: провайдер модели перегружен` : 'в работе'}` : '';
+}
+function renderTop() {
+  const right = PUB
+    ? `<span class="pubinfo">${S.pub ? 'Обновлено ' + fmtDate(S.pub.at) : ''}</span>`
+    : `<button class="btn" data-act="publish" id="pubBtn" title="Опубликовать на сайте">${I.globe}<span class="lbl">Опубликовать</span><i class="dot" hidden></i></button>
+       <button class="btn icon" data-act="settings" title="Настройки">${I.gear}</button>
+       <button class="btn primary" data-act="add">${I.plus}<span class="lbl">Добавить</span></button>`;
+  $('#top').innerHTML = `<button class="btn icon ghost burger" data-act="burger" title="Меню">${I.menu}</button>
+  <label class="search">${I.search}<input id="q" type="search" placeholder="Поиск по названию, тегам, шрифтам, цветам" value="${esc(S.q)}" autocomplete="off"><kbd>/</kbd></label>
+  <div class="top-r">${right}</div>`;
+  renderPubDot();
+}
+function renderPubDot() {
+  const d = $('#pubBtn .dot'); if (!d) return;
+  d.hidden = !(S.refs.length && S.lastChange > (S.settings.gh.lastAt || 0));
+}
+function renderContent() {
+  if (S.view === 'boards') renderBoards(); else renderLibrary();
+}
+function cardHTML(r) {
+  const ar = r.tw && r.th ? `${r.tw}/${r.th}` : '4/5';
+  const nb = r.boards.length; const st = r.ai?.status;
+  const badge = r.shot === 'pending' ? '<span class="ai"><i class="spin"></i>Скриншот</span>'
+    : st === 'running' ? '<span class="ai"><i class="spin"></i>Анализ</span>'
+    : st === 'pending' ? `<span class="ai"><i class="spin"></i>${r.ai.waitUntil > Date.now() ? 'Ждёт лимита' : 'В очереди'}</span>`
+    : st === 'error' && !PUB ? `<span class="ai err" title="${esc(r.ai.error)}">Ошибка анализа</span>` : '';
+  const sub = [r.tags.style.slice(0, 2).join(', '), hostOf(r.url)].filter(Boolean).join(' — ') || typeName(r.type);
+  return `<article class="card" data-id="${r.id}"${PUB ? '' : ' draggable="true"'}>
+  <div class="thumb" data-act="open" style="aspect-ratio:${ar}"><img data-img="${r.id}" alt="${esc(r.title)}" draggable="false">${badge}${PUB ? '' : `<button class="bbtn ${nb ? 'has' : ''}" data-act="boards" title="Разложить по доскам">${I.folder}${nb ? `<span>${nb}</span>` : ''}</button>`}</div>
+  <div class="cmeta" data-act="open"><div class="ctitle">${esc(r.title)}</div><div class="csub">${esc(sub)}</div></div></article>`;
+}
+function updateCard(r) {
+  const el = $(`.card[data-id="${r.id}"]`); if (!el) return;
+  el.outerHTML = cardHTML(r); observeImgs($(`.card[data-id="${r.id}"]`));
+}
+function emptyState() {
+  if (!S.refs.length && !PUB) return `<div class="empty"><h3>Здесь будут ваши референсы</h3><p>Перетащите скриншоты прямо в окно, вставьте картинку из буфера сочетанием Ctrl+V или добавьте ссылку на страницу. Нейросеть сама определит тип, стиль, шрифты и соберёт дизайн-систему.</p><div class="row"><button class="btn primary" data-act="add">${I.plus}Добавить референсы</button><button class="btn" data-act="settings">${I.gear}Подключить нейросеть</button></div></div>`;
+  if (S.view === 'board' && !S.q && !S.filters.length) return `<div class="empty"><h3>Доска пуста</h3><p>${PUB ? 'На этой доске пока ничего нет.' : 'Перетащите карточки из библиотеки на название доски в боковой панели или выберите доску в меню карточки.'}</p>${PUB ? '' : '<div class="row"><button class="btn" data-act="nav-library">Открыть библиотеку</button></div>'}</div>`;
+  if (S.q || S.filters.length) return `<div class="empty"><h3>Ничего не нашлось</h3><p>Попробуйте убрать часть фильтров или изменить запрос.</p><div class="row"><button class="btn" data-act="filter-clear">Сбросить фильтры и поиск</button></div></div>`;
+  return `<div class="empty"><h3>В этом разделе пусто</h3><p>${PUB ? 'Здесь пока нет референсов.' : 'Добавьте референс и выберите этот тип — или дождитесь, пока нейросеть отнесёт сюда подходящие.'}</p></div>`;
+}
+function renderLibrary() {
+  const list = visibleRefs(); let title;
+  if (S.view === 'board') { const b = boardById(S.boardId); if (!b) { S.view = 'boards'; return render(); } title = b.name; }
+  else title = S.type === 'all' ? 'Все референсы' : S.type === 'none' ? 'Без типа' : (typeById(S.type)?.name || '');
+  const canGroup = S.view === 'board' || S.type === 'all';
+  let h = `<div class="phead">${S.view === 'board' ? `<button class="crumb" data-act="nav-boards">${I.left}Доски</button>` : ''}<h1>${esc(title)}</h1><span class="cnt">${nRefs(list.length)}</span>
+  <div class="tools">${canGroup ? `<label class="swt"><input type="checkbox" id="grp" ${S.group ? 'checked' : ''}>По типам</label>` : ''}
+  <select id="sort" class="inp sm" aria-label="Сортировка"><option value="new" ${S.sort === 'new' ? 'selected' : ''}>Сначала новые</option><option value="old" ${S.sort === 'old' ? 'selected' : ''}>Сначала старые</option><option value="title" ${S.sort === 'title' ? 'selected' : ''}>По названию</option></select>
+  ${S.view === 'board' && !PUB ? `<button class="btn sm icon" data-act="board-edit" data-id="${S.boardId}" title="Переименовать или удалить доску">${I.dots}</button>` : ''}</div></div>`;
+  if (S.filters.length) h += `<div class="fbar">${S.filters.map(f => `<button class="chip on" data-act="filter" data-k="${f.k}" data-v="${esc(f.v)}">${f.k === 'noboard' ? 'Без доски' : esc(f.v)} <i class="x">✕</i></button>`).join('')}<button class="chip" data-act="filter-clear">Сбросить</button></div>`;
+  if (!list.length) h += emptyState();
+  else if (canGroup && S.group) {
+    const by = new Map(); for (const r of list) { const k = typeById(r.type) ? r.type : 'none'; if (!by.has(k)) by.set(k, []); by.get(k).push(r); }
+    for (const k of [...S.types.map(t => t.id), 'none']) {
+      const g = by.get(k); if (!g) continue;
+      h += `<section class="grp"><div class="grp-h"><h2>${esc(k === 'none' ? 'Без типа' : typeName(k))}</h2><span>${g.length}</span>${S.view === 'library' ? `<button class="lnk" data-act="type" data-id="${k}">Открыть раздел</button>` : ''}</div><div class="grid">${g.map(cardHTML).join('')}</div></section>`;
+    }
+  } else h += `<div class="grid">${list.map(cardHTML).join('')}</div>`;
+  $('#content').innerHTML = h; observeImgs($('#content'));
+}
+function renderBoards() {
+  const unsorted = S.refs.filter(r => !r.boards.length).length;
+  let h = `<div class="phead"><h1>Доски</h1><span class="cnt">${S.boards.length} ${plural(S.boards.length, 'доска', 'доски', 'досок')}</span>${!PUB && unsorted ? `<div class="tools"><button class="btn sm" data-act="show-unsorted">Не разложены: ${unsorted}</button></div>` : ''}</div><div class="bgrid">`;
+  for (const b of S.boards) {
+    const refs = S.refs.filter(r => r.boards.includes(b.id)).sort((a, z) => z.createdAt - a.createdAt); const cov = refs.slice(0, 3);
+    h += `<div class="folder" data-act="board-open" data-id="${b.id}" data-drop-board="${b.id}" tabindex="0"><div class="cover n${cov.length}">${cov.map(r => `<img data-img="${r.id}" alt="">`).join('')}${cov.length ? '' : `<div class="cover-e">${I.folder}</div>`}</div><div class="fname">${esc(b.name)}</div><div class="fcnt">${nRefs(refs.length)}</div></div>`;
+  }
+  if (!PUB) h += `<button class="folder new" data-act="board-add"><div class="cover">${I.plus}<span>Новая доска</span></div></button>`;
+  h += '</div>';
+  if (PUB && !S.boards.length) h += `<div class="empty"><h3>Досок пока нет</h3></div>`;
+  $('#content').innerHTML = h;
+  $$('.cover img[data-img]').forEach(img => { img.onload = () => img.classList.add('ld'); });
+  observeImgs($('#content'));
+}
+
+/* ---------- диалоги ---------- */
+function modal({ title, body = '', foot = '', wide = false, onClose }) {
+  const ov = document.createElement('div'); ov.className = 'ov';
+  ov.innerHTML = `<div class="dlg ${wide ? 'wide' : ''}" role="dialog" aria-modal="true" aria-label="${esc(title)}"><div class="dlg-h"><h3>${esc(title)}</h3><button class="btn icon ghost" data-close title="Закрыть">${I.close}</button></div><div class="dlg-b">${body}</div>${foot ? `<div class="dlg-f">${foot}</div>` : ''}</div>`;
+  $('#layer').appendChild(ov);
+  let down = false;
+  const close = () => { if (!ov.isConnected) return; ov.remove(); onClose && onClose(); };
+  ov.addEventListener('mousedown', e => { down = e.target === ov; });
+  ov.addEventListener('click', e => { if ((e.target === ov && down) || e.target.closest('[data-close]')) close(); down = false; });
+  ov._close = close;
+  return { el: ov, close, q: s => ov.querySelector(s) };
+}
+function askText(title, { label = 'Название', value = '', ok = 'Сохранить', extra = '' } = {}) {
+  return new Promise(res => {
+    let done = false;
+    const m = modal({ title, body: `<label class="f"><span>${esc(label)}</span><input class="inp" id="ask-in" value="${esc(value)}" maxlength="80"></label>`, foot: `${extra}<button class="btn" data-close>Отмена</button><button class="btn primary" id="ask-ok">${esc(ok)}</button>`, onClose: () => { if (!done) res(null); } });
+    const inp = m.q('#ask-in'); setTimeout(() => { inp.focus(); inp.select(); }, 30);
+    const fin = v => { done = true; m.close(); res(v); };
+    m.q('#ask-ok').onclick = () => { const v = inp.value.trim(); if (v) fin(v); };
+    inp.onkeydown = e => { if (e.key === 'Enter') { const v = inp.value.trim(); if (v) fin(v); } };
+    m.q('#ask-del')?.addEventListener('click', () => fin({ del: true }));
+  });
+}
+function confirmDlg(title, text, ok = 'Удалить', danger = true) {
+  return new Promise(res => {
+    let done = false;
+    const m = modal({ title, body: `<p style="margin:6px 0 0;line-height:1.55;color:var(--ink-2)">${text}</p>`, foot: `<button class="btn" data-close>Отмена</button><button class="btn ${danger ? 'danger' : 'primary'}" id="cf-ok">${esc(ok)}</button>`, onClose: () => { if (!done) res(false); } });
+    m.q('#cf-ok').onclick = () => { done = true; m.close(); res(true); };
+  });
+}
+function choiceDlg(title, text, buttons) {
+  return new Promise(res => {
+    let done = false;
+    const m = modal({ title, body: `<p style="margin:6px 0 0;line-height:1.55;color:var(--ink-2)">${text}</p>`, foot: `<button class="btn" data-close>Отмена</button>` + buttons.map(b => `<button class="btn ${b.cls || ''}" data-k="${b.k}">${esc(b.label)}</button>`).join(''), onClose: () => { if (!done) res(null); } });
+    m.el.addEventListener('click', e => { const b = e.target.closest('[data-k]'); if (b) { done = true; m.close(); res(b.dataset.k); } });
+  });
+}
+
+/* ---------- типы и доски ---------- */
+async function addType() {
+  const name = await askText('Новый тип материала', { ok: 'Добавить' }); if (!name) return;
+  const t = { id: 't' + uid(), name }; S.types.push(t); await saveTypes(); renderSide(); toast(`Тип «${name}» добавлен`);
+}
+async function editType(id) {
+  const t = typeById(id); if (!t) return;
+  const v = await askText('Тип материала', { value: t.name, extra: '<button class="btn danger grow" id="ask-del">Удалить тип</button>' });
+  if (!v) return;
+  if (v.del) {
+    const n = S.refs.filter(r => r.type === id).length;
+    if (!(await confirmDlg('Удалить тип?', `«${esc(t.name)}» исчезнет из списка. ${n ? `${nRefs(n)} останутся в библиотеке без типа.` : ''}`))) return;
+    S.types = S.types.filter(x => x.id !== id); await saveTypes();
+    for (const r of S.refs.filter(r => r.type === id)) { r.type = ''; await saveRef(r); }
+    if (S.type === id) S.type = 'all';
+  } else { t.name = v; await saveTypes(); }
+  render();
+}
+async function createBoard(name) {
+  const b = { id: 'b' + uid(), name, createdAt: Date.now() }; S.boards.push(b); await saveBoard(b); return b;
+}
+async function addBoard() {
+  const name = await askText('Новая доска', { ok: 'Создать' }); if (!name) return;
+  await createBoard(name); render(); toast(`Доска «${name}» создана`);
+}
+async function editBoard(id) {
+  const b = boardById(id); if (!b) return;
+  const v = await askText('Доска', { value: b.name, extra: '<button class="btn danger grow" id="ask-del">Удалить доску</button>' });
+  if (!v) return;
+  if (v.del) {
+    if (!(await confirmDlg('Удалить доску?', `Доска «${esc(b.name)}» будет удалена. Сами референсы останутся в библиотеке.`))) return;
+    S.boards = S.boards.filter(x => x.id !== id); await DB.del('boards', id); markChanged();
+    for (const r of S.refs.filter(r => r.boards.includes(id))) { r.boards = r.boards.filter(x => x !== id); await saveRef(r); }
+    if (S.boardId === id) { S.view = 'boards'; S.boardId = null; }
+  } else { b.name = v; await saveBoard(b); }
+  render();
+}
+async function setBoard(r, bid, on) {
+  const has = r.boards.includes(bid); if (on === has) return;
+  r.boards = on ? [...r.boards, bid] : r.boards.filter(x => x !== bid);
+  await saveRef(r);
+  if (S.view === 'board' && !on && bid === S.boardId) renderContent(); else if (S.view === 'boards') renderContent(); else updateCard(r);
+  renderSide();
+  if (S.openId === r.id) renderDetail();
+}
+
+/* выпадающее меню досок */
+let popOutside = null;
+function closePop() { $('#pop')?.remove(); if (popOutside) { document.removeEventListener('mousedown', popOutside, true); popOutside = null; } }
+function openBoardsPop(anchor, id) {
+  closePop(); const r = refById(id); if (!r) return;
+  const pop = document.createElement('div'); pop.className = 'pop'; pop.id = 'pop';
+  const draw = () => {
+    pop.innerHTML = `<div class="pop-h">Доски</div><div class="pop-list">${S.boards.map(b => `<label><input type="checkbox" data-b="${b.id}" ${r.boards.includes(b.id) ? 'checked' : ''}><span>${esc(b.name)}</span></label>`).join('') || '<div class="pop-e">Досок пока нет — создайте первую</div>'}</div><input class="inp" id="pop-new" placeholder="Новая доска и Enter" maxlength="80">`;
+  };
+  draw(); document.body.appendChild(pop);
+  const rc = anchor.getBoundingClientRect(); const ph = pop.offsetHeight;
+  pop.style.left = clamp(rc.right - 264, 10, innerWidth - 274) + 'px';
+  pop.style.top = (rc.bottom + 6 + ph > innerHeight ? Math.max(10, rc.top - ph - 6) : rc.bottom + 6) + 'px';
+  pop.addEventListener('change', e => { const b = e.target.dataset.b; if (b) setBoard(r, b, e.target.checked); });
+  pop.addEventListener('keydown', async e => {
+    if (e.target.id !== 'pop-new' || e.key !== 'Enter') return;
+    const name = e.target.value.trim(); if (!name) return;
+    const b = await createBoard(name); await setBoard(r, b.id, true); draw(); $('#pop-new', pop).focus();
+  });
+  popOutside = e => { if (!pop.contains(e.target) && !anchor.contains(e.target)) closePop(); };
+  setTimeout(() => document.addEventListener('mousedown', popOutside, true), 0);
+}
+
+/* ---------- дизайн-система ---------- */
+const CSS_OK = { background: 'background', color: 'color', border: 'border', borderRadius: 'border-radius', padding: 'padding', boxShadow: 'box-shadow', fontFamily: 'font-family', fontWeight: 'font-weight', fontSize: 'font-size', textTransform: 'text-transform', letterSpacing: 'letter-spacing' };
+function cssVal(v) { v = String(v ?? '').trim(); if (!v || /[;{}<>\\]|url\s*\(|expression|javascript:|@import/i.test(v)) return ''; return v.slice(0, 160); }
+function styleStr(o, opt = {}) {
+  return Object.entries(o || {}).map(([k, v]) => {
+    const p = CSS_OK[k]; let val = cssVal(v); if (!p || !val) return '';
+    if (p === 'font-size') { const px = parseFloat(val); if (!isNaN(px)) val = clamp(px, opt.minFs || 11, opt.maxFs || 22) + 'px'; }
+    if (p === 'padding') { const parts = val.split(/\s+/).map(x => { const n = parseFloat(x); return isNaN(n) ? x : clamp(n, 0, 28) + 'px'; }); val = parts.join(' '); }
+    if (p === 'font-family') { const f = cssFont(val.split(',')[0]); loadFont(f); val = `'${f}', system-ui, sans-serif`; }
+    return `${p}:${val}`;
+  }).filter(Boolean).join(';');
+}
+const KIND_RU = { button: 'Кнопка', input: 'Поле ввода', card: 'Карточка', nav: 'Навигация', badge: 'Бейдж', chip: 'Чип', tabs: 'Вкладки', toggle: 'Переключатель', checkbox: 'Чекбокс', radio: 'Радиокнопка', slider: 'Слайдер', avatar: 'Аватар', tooltip: 'Подсказка', modal: 'Модальное окно', table: 'Таблица', list: 'Список', search: 'Поиск', pagination: 'Пагинация', progress: 'Прогресс', other: 'Компонент' };
+const ROLE_RU = { primary: 'основной', secondary: 'вторичный', accent: 'акцент', background: 'фон', surface: 'поверхность', text: 'текст', muted: 'приглушённый', border: 'обводка', success: 'успех', warning: 'предупреждение', error: 'ошибка', decorative: 'декор', display: 'дисплей', h1: 'H1', h2: 'H2', h3: 'H3', body: 'основной текст', caption: 'подпись', label: 'метка', button: 'кнопка', nav: 'навигация', numeric: 'цифры', logo: 'логотип' };
+const ru = v => ROLE_RU[low(v)] || v;
+function componentPreview(c) {
+  const st = styleStr(c.styles); const kind = low(c.kind); const label = esc(c.name || KIND_RU[kind] || 'Компонент');
+  if (!st) return '';
+  if (kind === 'input' || kind === 'search') return `<div class="prev" style="min-width:180px;display:flex;align-items:center;height:auto;${st}"><span style="opacity:.6">${kind === 'search' ? 'Поиск…' : 'Текст в поле'}</span></div>`;
+  if (kind === 'card' || kind === 'modal') return `<div class="prev" style="width:220px;padding:14px;white-space:normal;${st}"><div style="font-weight:600;margin-bottom:4px">${label}</div><div style="opacity:.7;font-size:12px">Пример содержимого карточки</div></div>`;
+  if (kind === 'toggle') return `<div class="prev" style="width:44px;height:24px;padding:0;${st}"></div>`;
+  return `<span class="prev" style="display:inline-flex;align-items:center;${st}">${label}</span>`;
+}
+function dsSection(k, title, inner, ro) { return `<div class="ds-sec"><div class="ds-t"><span>${title}</span>${ro ? '' : `<button class="lnk" data-act="d-dsdel" data-k="${k}" style="font-size:12px">Убрать</button>`}</div>${inner}</div>`; }
+function kvHTML(o, map) { const rows = Object.entries(o || {}).filter(([, v]) => v !== '' && v != null && typeof v !== 'object'); return rows.length ? `<dl class="kv">${rows.map(([k, v]) => `<dt>${esc(map[k] || k)}</dt><dd>${esc(v)}</dd>`).join('')}</dl>` : ''; }
+function dsHTML(ds, ro) {
+  if (!ds || !Object.keys(ds).length) return '';
+  const out = [];
+  if (ds.colors?.length) out.push(dsSection('colors', 'Цвета', `<div class="sw">${ds.colors.map(c => `<button class="swc" data-act="copy" data-v="${esc(c.hex)}" title="Скопировать ${esc(c.hex)}"><i style="background:${esc(c.hex)}"></i><div><b>${esc(c.hex)}</b>${esc([c.name, ru(c.role)].filter(Boolean).join(', '))}</div></button>`).join('')}</div>`, ro));
+  if (ds.gradients?.length) out.push(dsSection('gradients', 'Градиенты', `<div class="sw">${ds.gradients.map(g => { const v = cssVal(g.css); return v ? `<button class="swc" data-act="copy" data-v="${esc(v)}" title="Скопировать CSS"><i style="background:${esc(v)}"></i><div><b>${esc(g.name || 'Градиент')}</b>CSS</div></button>` : ''; }).join('')}</div>`, ro));
+  if (ds.typography?.length) out.push(dsSection('typography', 'Типографика', ds.typography.map(t => {
+    loadFont(t.font); const px = parseFloat(t.size); const fs = isNaN(px) ? 16 : clamp(px, 12, 40);
+    const big = ['display', 'h1', 'h2', 'logo'].includes(low(t.role));
+    const sample = big ? 'Дизайн, который помнят' : 'Съешь ещё этих мягких французских булок';
+    const style = `font-family:'${esc(cssFont(t.font))}', system-ui, sans-serif;font-size:${fs}px;font-weight:${clamp(parseInt(t.weight) || 400, 100, 900)};text-transform:${['uppercase', 'lowercase', 'capitalize'].includes(low(t.case)) ? low(t.case) : 'none'}`;
+    return `<div class="ty"><span class="r">${esc(ru(t.role) || '')}</span><span class="s" style="${style}">${sample}</span><span class="m">${esc([t.font, t.weight, t.size, t.lineHeight && 'интерлиньяж ' + t.lineHeight, t.letterSpacing && 'трекинг ' + t.letterSpacing].filter(Boolean).join(', '))}</span></div>`;
+  }).join(''), ro));
+  if (ds.spacing && (ds.spacing.scale?.length || ds.spacing.base)) {
+    const sc = (ds.spacing.scale || []).slice(0, 10);
+    out.push(dsSection('spacing', 'Отступы', `${sc.length ? `<div class="spc">${sc.map(v => { const n = parseFloat(v) || 4; return `<div><i style="height:${clamp(n, 2, 64)}px"></i>${esc(v)}</div>`; }).join('')}</div>` : ''}${kvHTML({ base: ds.spacing.base, notes: ds.spacing.notes }, { base: 'База', notes: 'Заметки' })}`, ro));
+  }
+  if (ds.radii?.length) out.push(dsSection('radii', 'Скругления', `<div class="boxes">${ds.radii.map(r => `<div class="bx"><i style="border-radius:${esc(cssVal(r.value))}"></i>${esc([r.name, r.value].filter(Boolean).join(' '))}${r.usage ? `<br>${esc(r.usage)}` : ''}</div>`).join('')}</div>`, ro));
+  if (ds.shadows?.length) out.push(dsSection('shadows', 'Тени', `<div class="boxes">${ds.shadows.map(s => `<div class="bx sh"><i style="border-radius:8px;box-shadow:${esc(cssVal(s.css))}"></i>${esc(s.name || '')}${s.usage ? `<br>${esc(s.usage)}` : ''}</div>`).join('')}</div>`, ro));
+  if (ds.borders?.length) out.push(dsSection('borders', 'Обводки', `<div class="boxes">${ds.borders.map(b => `<div class="bx"><i style="border:${esc(cssVal(b.css))};border-radius:6px"></i>${esc(b.css || '')}${b.usage ? `<br>${esc(b.usage)}` : ''}</div>`).join('')}</div>`, ro));
+  if (ds.grid && Object.keys(ds.grid).length) { const c = clamp(parseInt(ds.grid.columns) || 0, 0, 24); out.push(dsSection('grid', 'Сетка', `${kvHTML(ds.grid, { columns: 'Колонки', gutter: 'Межколонник', margin: 'Поля', maxWidth: 'Макс. ширина', notes: 'Заметки' })}${c ? `<div class="gridv">${'<i></i>'.repeat(c)}</div>` : ''}`, ro)); }
+  if (ds.components?.length) out.push(dsSection('components', 'Компоненты', ds.components.map(c => `<div class="cmp"><span class="k">${esc(KIND_RU[low(c.kind)] || c.kind || 'Компонент')}</span>${componentPreview(c)}${c.description ? `<div class="d">${esc(c.description)}</div>` : ''}</div>`).join(''), ro));
+  if (ds.iconography && Object.keys(ds.iconography).length) out.push(dsSection('iconography', 'Иконки', kvHTML(ds.iconography, { style: 'Стиль', stroke: 'Толщина линии', notes: 'Заметки' }), ro));
+  if (ds.imagery && Object.keys(ds.imagery).length) out.push(dsSection('imagery', 'Изображения', kvHTML(ds.imagery, { style: 'Стиль', treatment: 'Обработка' }), ro));
+  if (ds.illustration && Object.keys(ds.illustration).length) out.push(dsSection('illustration', 'Иллюстрации', kvHTML(ds.illustration, { style: 'Стиль', notes: 'Заметки' }), ro));
+  if (ds.motifs?.length) out.push(dsSection('motifs', 'Графические приёмы', `<div class="chips">${ds.motifs.map(m => `<span class="chip">${esc(m)}</span>`).join('')}</div>`, ro));
+  if (ds.layout && Object.keys(ds.layout).length) out.push(dsSection('layout', 'Композиция', kvHTML(ds.layout, { composition: 'Построение', density: 'Плотность', notes: 'Заметки' }), ro));
+  return out.join('');
+}
+function dsToCSS(ds, title) {
+  const L = [`/* ${String(title).replace(/\*\//g, '')} — токены из Refbase */`, ':root {']; const used = {};
+  const name = (p, s, i) => { let k = `--${p}-${String(s || i).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || i}`; if (used[k]) k += '-' + (++used[k]); else used[k] = 1; return k; };
+  (ds.colors || []).forEach((c, i) => L.push(`  ${name('color', c.role || c.name, i + 1)}: ${c.hex};`));
+  (ds.gradients || []).forEach((g, i) => L.push(`  ${name('gradient', '', i + 1)}: ${g.css};`));
+  (ds.typography || []).forEach((t, i) => { const r = t.role || i + 1; L.push(`  ${name('font', r, i + 1)}: '${cssFont(t.font)}';`); if (t.size) L.push(`  ${name('text-size', r, i + 1)}: ${t.size};`); if (t.weight) L.push(`  ${name('text-weight', r, i + 1)}: ${t.weight};`); });
+  (ds.spacing?.scale || []).forEach((v, i) => L.push(`  --space-${i + 1}: ${v};`));
+  (ds.radii || []).forEach((r, i) => L.push(`  ${name('radius', r.name, i + 1)}: ${r.value};`));
+  (ds.shadows || []).forEach((s, i) => L.push(`  ${name('shadow', s.name, i + 1)}: ${s.css};`));
+  L.push('}'); return L.join('\n');
+}
+
+/* ---------- карточка референса ---------- */
+function tagBlock(r, k, label, ro) {
+  const vals = r.tags[k] || []; if (ro && !vals.length) return '';
+  return `<div class="blk"><div class="blk-h">${label}</div><div class="chips">${vals.map(v => `<span class="chip" data-act="d-tag" data-k="${k}" data-v="${esc(v)}" title="Показать все с этим тегом">${esc(v)}${ro ? '' : `<i class="x" data-act="d-tagdel" data-k="${k}" data-v="${esc(v)}" title="Убрать">✕</i>`}</span>`).join('')}${ro ? '' : `<input class="tag-add" data-k="${k}" placeholder="+ добавить">`}</div></div>`;
+}
+const PROV_NAME = { claude: 'Claude', openai: 'OpenAI', ollama: 'Ollama', custom: 'Своя модель' };
+function infoHTML(r) {
+  const ro = PUB; const st = r.ai?.status;
+  let h = ro ? `<h2 class="ttl">${esc(r.title)}</h2>` : `<input class="ttl-in" id="d-title" value="${esc(r.title)}" maxlength="120" aria-label="Название">`;
+  h += `<div class="row">${ro ? `<span class="chip">${esc(typeName(r.type))}</span>${r.boards.map(b => boardById(b)).filter(Boolean).map(b => `<span class="chip" data-act="board-open" data-id="${b.id}">${I.folder}${esc(b.name)}</span>`).join('')}`
+    : `<select id="d-type" class="inp sm" aria-label="Тип материала">${S.types.map(t => `<option value="${t.id}" ${t.id === r.type ? 'selected' : ''}>${esc(t.name)}</option>`).join('')}<option value="" ${typeById(r.type) ? '' : 'selected'}>Без типа</option></select>
+       <button class="btn sm" data-act="d-boards">${I.folder}${r.boards.length ? esc(r.boards.map(b => boardById(b)?.name).filter(Boolean).join(', ').slice(0, 40)) : 'На доску'}</button>`}</div>`;
+  h += ro ? (r.url ? `<div class="src"><a class="ext" href="${esc(r.url)}" target="_blank" rel="noopener">${I.link}${esc(hostOf(r.url) || r.url)}</a></div>` : '')
+    : `<div class="src">${I.link}<input id="d-url" class="inp" placeholder="Ссылка на источник" value="${esc(r.url)}">${r.url ? `<a class="btn sm icon" href="${esc(r.url)}" target="_blank" rel="noopener" title="Открыть источник">${I.ext}</a>` : ''}</div>`;
+  if (!ro) {
+    if (isPageLink(r)) {
+      h += `<div class="srcnote">${r.shot === 'pending' ? '<i class="spin"></i> Делаю скриншот первого экрана по ссылке…' : 'Обложка — первый экран страницы по ссылке. Анализ идёт в первую очередь по ссылке.'} ${r.shot === 'pending' ? '' : '<button class="lnk" data-act="d-reshoot" style="font-size:12px">Обновить скриншот</button>'}</div>`;
+      if (r.userShot) h += `<div class="srcnote">Ваш скриншот учитывается как дополнительный материал. <button class="lnk" data-act="d-usershot-del" style="font-size:12px">Убрать</button></div>`;
+    } else h += `<div class="srcnote">Ссылки нет: анализ и обложка — по скриншоту. Добавьте ссылку, и анализ пойдёт по странице.</div>`;
+    if (st === 'running' || st === 'pending') h += `<div class="aibar"><i class="spin"></i>${st === 'running' ? 'Нейросеть изучает референс…' : r.ai.waitUntil > Date.now() ? `Провайдер модели перегружен. Повтор в ${new Date(r.ai.waitUntil).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}, попытка ${r.ai.rateTries + 1} из 7` : 'Ждёт очереди на анализ'}</div>`;
+    else if (st === 'error') h += `<div class="aibar err"><span>${esc(r.ai.error || 'Ошибка анализа')}</span>${r.ai.raw ? '<button class="btn sm" data-act="d-raw">Ответ модели</button>' : ''}<button class="btn sm" data-act="d-analyze">${I.spark}Повторить</button></div>`;
+    else if (st === 'done') h += `<div class="aibar"><span>Разметка ${r.ai.source === 'link' ? 'по ссылке' + (r.ai.fetched ? ', страница прочитана' : '') : 'по скриншоту'}: ${esc(providerLabel(r.ai.provider, r))} ${esc(r.ai.model || '')}</span><button class="btn sm" data-act="d-analyze">${I.spark}Заново</button></div>`;
+    else h += `<div class="aibar"><span>Теги ещё не проставлены</span><button class="btn sm" data-act="d-analyze">${I.spark}Проанализировать</button></div>`;
+  }
+  if (r.description) h += `<p class="desc">${esc(r.description)}</p>`;
+  h += tagBlock(r, 'style', 'Стиль', ro) + tagBlock(r, 'direction', 'Графическое направление', ro) + tagBlock(r, 'keywords', 'Теги', ro);
+  if (r.fonts.length || !ro) {
+    h += `<div class="blk"><div class="blk-h">Шрифты${r.fonts.length ? '' : ' <span class="sub">не определены</span>'}</div>`;
+    h += r.fonts.map((f, i) => {
+      loadFont(f.name);
+      return `<div class="font"><div class="sample" style="font-family:'${esc(cssFont(f.name))}', ${fontFallback(f.category)}" data-act="d-tag" data-k="font" data-v="${esc(f.name)}" title="Показать все с этим шрифтом">${esc(f.name)}</div>
+      <div class="meta">${esc([f.category, f.role].filter(Boolean).join(', '))}</div>
+      ${f.confidence ? `<div class="conf" title="Уверенность нейросети ${Math.round(f.confidence * 100)}%"><i style="width:${Math.round(f.confidence * 100)}%"></i></div>` : ''}
+      ${f.alternatives?.length ? `<div class="alts">Похожие: ${f.alternatives.map(a => `<span class="chip">${esc(a)}</span>`).join('')}</div>` : ''}
+      <div class="font-acts"><a href="https://fonts.google.com/?query=${encodeURIComponent(f.name)}" target="_blank" rel="noopener">Google Fonts</a><a href="https://www.myfonts.com/search?query=${encodeURIComponent(f.name)}" target="_blank" rel="noopener">MyFonts</a>${ro ? '' : `<button data-act="d-fontdel" data-i="${i}">Убрать</button>`}</div></div>`;
+    }).join('');
+    if (!ro) h += `<input class="tag-add" data-k="font" placeholder="+ шрифт" style="width:120px">`;
+    h += '</div>';
+  }
+  if (r.palette?.length) h += `<div class="blk"><div class="blk-h">Палитра <span class="sub">замер по пикселям, нажмите для копирования</span></div><div class="strip">${r.palette.map(p => `<button style="background:${p.hex};flex:${p.p}" data-act="copy" data-v="${p.hex}" title="${p.hex} — ${p.p}%"></button>`).join('')}</div></div>`;
+  const ds = dsHTML(r.ds, ro);
+  if (ds) h += `<div class="blk"><div class="blk-h">Дизайн-система <span class="sub">из найденных элементов</span><span class="act"><button class="lnk" data-act="d-css">CSS</button><button class="lnk" data-act="d-json">JSON</button></span></div>${ds}</div>`;
+  if (!ro) {
+    h += `<div class="notes"><div class="blk-h">Заметки <span class="sub">не публикуются</span></div><textarea class="inp" id="d-notes" rows="3" placeholder="Что здесь понравилось, где применить">${esc(r.notes)}</textarea></div>`;
+    h += `<div class="dfoot"><button class="btn sm" data-act="d-replace">${isPageLink(r) ? 'Добавить свой скриншот' : 'Заменить изображение'}</button>${r.hasImg ? '<button class="btn sm" data-act="d-download">Скачать оригинал</button>' : ''}<button class="btn sm danger" data-act="d-delete">Удалить</button></div>`;
+  }
+  return h;
+}
+function renderDetail() {
+  const r = refById(S.openId); if (!r) return closeDetail();
+  let ov = $('#detail');
+  if (!ov) {
+    ov = document.createElement('div'); ov.id = 'detail'; ov.className = 'sheet-ov'; $('#layer').appendChild(ov);
+    ov.addEventListener('click', e => { if (e.target === ov) closeDetail(); });
+    ov.addEventListener('input', onDetailInput); ov.addEventListener('change', onDetailChange); ov.addEventListener('keydown', onDetailKey);
+    document.body.classList.add('noscroll');
+  }
+  if (ov.dataset.id !== r.id) {
+    ov.dataset.id = r.id; const tall = r.h && r.w && r.h / r.w > 1.3;
+    ov.innerHTML = `<div class="sheet"><div class="imgcol"><div class="sheet-img ${tall ? '' : 'center'}"><img id="dimg" alt="${esc(r.title)}"></div><button class="navb l" data-act="d-prev" title="Предыдущий (←)">${I.left}</button><button class="navb r" data-act="d-next" title="Следующий (→)">${I.right}</button><button class="x" data-act="d-close" title="Закрыть (Esc)">${I.close}</button></div><div class="sheet-info"></div></div>`;
+    fullSrc(r).then(u => { const img = $('#dimg'); if (!img || ov.dataset.id !== r.id) return; if (u) img.src = u; else img.replaceWith(Object.assign(document.createElement('div'), { className: 'ph', textContent: 'Нет изображения' })); });
+  }
+  const info = $('.sheet-info', ov); const top = info.scrollTop; const focusK = document.activeElement?.classList.contains('tag-add') ? document.activeElement.dataset.k : null;
+  info.innerHTML = infoHTML(r); info.scrollTop = top;
+  if (focusK) $(`.tag-add[data-k="${focusK}"]`, info)?.focus();
+}
+function openDetail(id) { closePop(); S.openId = id; renderDetail(); }
+function closeDetail() { S.openId = null; $('#detail')?.remove(); document.body.classList.remove('noscroll'); if (fullURL) { URL.revokeObjectURL(fullURL); fullURL = null; } }
+function stepDetail(d) {
+  const list = visibleRefs(); const i = list.findIndex(r => r.id === S.openId); if (i < 0 || !list.length) return;
+  openDetail(list[(i + d + list.length) % list.length].id);
+}
+const saveDetailText = debounce(r => { saveRef(r); updateCard(r); }, 500);
+function onDetailInput(e) {
+  const r = refById(S.openId); if (!r || PUB) return;
+  if (e.target.id === 'd-title') { r.title = e.target.value.trim() || 'Без названия'; r.titleAuto = false; saveDetailText(r); }
+  if (e.target.id === 'd-notes') { r.notes = e.target.value; saveDetailText(r); }
+}
+async function onDetailChange(e) {
+  const r = refById(S.openId); if (!r || PUB) return;
+  if (e.target.id === 'd-type') { r.type = e.target.value; r.typeLocked = true; await saveRef(r); renderContent(); renderSide(); }
+  if (e.target.id === 'd-url') await changeURL(r, e.target.value);
+}
+async function onDetailKey(e) {
+  if (!e.target.classList.contains('tag-add') || (e.key !== 'Enter' && e.key !== ',')) return;
+  e.preventDefault(); const r = refById(S.openId); const v = e.target.value.trim().replace(/,$/, ''); if (!r || !v) return;
+  const k = e.target.dataset.k;
+  if (k === 'font') { if (!r.fonts.some(f => low(f.name) === low(v))) r.fonts.push({ name: v, category: '', role: '', confidence: 0, alternatives: [] }); }
+  else if (!r.tags[k].some(t => low(t) === low(v))) r.tags[k].push(v);
+  await saveRef(r); renderDetail(); updateCard(r); renderSide();
+}
+
+/* ---------- добавление ---------- */
+const cleanName = n => String(n || '').replace(/\.[a-z0-9]{2,5}$/i, '').replace(/[_-]+/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 80) || 'Без названия';
+function addContext() { return { board: S.view === 'board' ? S.boardId : null }; }
+async function createRefFromBlob(blob, o = {}) {
+  const p = await processImage(blob); const id = uid();
+  await putFile(id, 'orig', p.orig); await putFile(id, 'web', p.web); await putFile(id, 'thumb', p.thumb);
+  const r = normalizeRef({
+    id, createdAt: Date.now(), title: o.title || 'Без названия', titleAuto: true, url: o.url || '',
+    type: o.type || '', typeLocked: !!o.type, w: p.w, h: p.h, tw: p.tw, th: p.th, palette: p.palette,
+    boards: o.board ? [o.board] : [], hasImg: true, webType: p.web.type, cover: 'upload', urlIsImage: !!o.url, ai: { status: 'none' },
+  });
+  S.refs.unshift(r); await saveRef(r); return r;
+}
+async function addFiles(files, o = {}) {
+  const list = [...files].filter(f => f.type?.startsWith('image/'));
+  if (!list.length) { toast('Можно добавлять только изображения: PNG, JPG, WebP, GIF', 'err'); return; }
+  const ctx = { ...addContext(), ...o }; let ok = 0;
+  for (const f of list) {
+    try { const r = await createRefFromBlob(f, { ...ctx, title: cleanName(f.name) }); ok++; render(); maybeAnalyze(r); }
+    catch (e) { toast(`${f.name || 'Изображение'}: ${e.message}`, 'err'); }
+  }
+  if (ok) toast(ok === 1 ? 'Референс добавлен' : `Добавлено: ${nRefs(ok)}`);
+}
+const isImageURL = u => /\.(png|jpe?g|webp|gif|avif)(\?|#|$)/i.test(u || '');
+const isPageLink = r => !!r?.url && !r.urlIsImage && !isImageURL(r.url);
+/* mShots: vpw/vph — размер окна браузера, w/h — размер готового кадра. */
+const shotURL = (u, kind = 'cover', bust) => `https://s.wordpress.com/mshots/v1/${encodeURIComponent(u)}?${kind === 'deep' ? 'vpw=1440&vph=3600&w=1440&h=3600' : 'vpw=1440&vph=900&w=1440&h=900'}${bust ? '&_=' + bust : ''}`;
+function loadImg(src, cors) {
+  return new Promise((res, rej) => { const i = new Image(); if (cors) i.crossOrigin = 'anonymous'; i.onload = () => res(i); i.onerror = () => rej(new Error('load')); i.src = src; });
+}
+/* Скриншот страницы через бесплатный сервис mShots: первый ответ — заглушка, потом готовый кадр. */
+async function captureShot(u, kind = 'cover') {
+  for (let t = 0; t < 10; t++) {
+    const src = shotURL(u, kind, t ? Date.now() : 0);
+    try {
+      const img = await loadImg(src, true);
+      if (img.naturalWidth >= 1000) { const b = await toBlob(canvasFrom(img, 0, 0, img.naturalWidth, img.naturalHeight, img.naturalWidth, img.naturalHeight), 'image/png'); if (b) return { blob: b }; }
+    } catch {
+      try { const img = await loadImg(src, false); if (img.naturalWidth >= 1000) return { remote: src }; } catch { /* ещё не готово */ }
+    }
+    await sleep(3500);
+  }
+  return { remote: shotURL(u, kind) };
+}
+const normURL = v => { v = String(v || '').trim(); if (v && !/^https?:\/\//i.test(v)) v = 'https://' + v; return v; };
+function refreshDetail(r) { if (S.openId === r.id && $('#detail')) { $('#detail').dataset.id = ''; renderDetail(); } }
+async function setCover(r, blob) {
+  const p = await processImage(blob);
+  await putFile(r.id, 'orig', p.orig); await putFile(r.id, 'web', p.web); await putFile(r.id, 'thumb', p.thumb);
+  Object.assign(r, { w: p.w, h: p.h, tw: p.tw, th: p.th, palette: p.palette, hasImg: true, webType: p.web.type }); delete r.remote;
+  dropThumb(r.id);
+}
+async function clearCover(r) {
+  for (const k of ['orig', 'web', 'thumb']) await DB.del('files', r.id + ':' + k);
+  Object.assign(r, { hasImg: false, palette: [] }); delete r.tw; delete r.th; delete r.w; delete r.h; dropThumb(r.id);
+}
+/* Правило: у референса со ссылкой обложка — первый экран страницы; длинный кадр идёт в анализ. */
+async function shootLink(r, analyze = true) {
+  const u = r.url; r.shot = 'pending'; r.cover = 'link'; await saveRef(r); updateCard(r); refreshDetail(r);
+  const [cover, deep] = await Promise.all([captureShot(u, 'cover'), captureShot(u, 'deep')]);
+  if (!refById(r.id) || r.url !== u) return;
+  delete r.shot;
+  if (cover.blob) await setCover(r, cover.blob); else { await clearCover(r); r.remote = cover.remote; }
+  if (deep.blob) { await putFile(r.id, 'deep', deep.blob); delete r.deepRemote; } else { await DB.del('files', r.id + ':deep'); r.deepRemote = deep.remote; }
+  await saveRef(r); updateCard(r); refreshDetail(r);
+  if (analyze) maybeAnalyze(r);
+}
+async function addUserShot(r, blob) {
+  await putFile(r.id, 'user', blob); r.userShot = true; await saveRef(r); refreshDetail(r);
+  toast('Скриншот добавлен как дополнительный материал к ссылке'); maybeAnalyze(r, true);
+}
+/* Своё изображение: без ссылки оно становится обложкой и источником анализа, со ссылкой — дополнительным материалом. */
+async function attachImage(r, blob, analyze = true) {
+  if (isPageLink(r)) return addUserShot(r, blob);
+  await setCover(r, blob); r.cover = 'upload'; delete r.shot;
+  await saveRef(r); updateCard(r); refreshDetail(r);
+  if (analyze) maybeAnalyze(r, true);
+}
+async function changeURL(r, raw) {
+  const url = normURL(raw); if (url === r.url) return;
+  const wasPage = isPageLink(r); r.url = url; r.urlIsImage = false;
+  if (isPageLink(r)) {
+    if (!wasPage && r.hasImg && r.cover !== 'link') { const b = await getFile(r.id, 'orig'); if (b) { await putFile(r.id, 'user', b); r.userShot = true; } }
+    await saveRef(r); shootLink(r);
+  } else {
+    if (wasPage) {
+      await DB.del('files', r.id + ':deep'); delete r.deepRemote; delete r.shot;
+      if (r.userShot) { const b = await getFile(r.id, 'user'); if (b) await setCover(r, b); await DB.del('files', r.id + ':user'); r.userShot = false; }
+      r.cover = 'upload';
+    }
+    await saveRef(r); updateCard(r); refreshDetail(r);
+    if (wasPage) maybeAnalyze(r);
+  }
+}
+async function addUrl(raw, o = {}) {
+  let u = normURL(raw); if (!u) return;
+  try { new URL(u); } catch { toast('Не похоже на ссылку: ' + raw, 'err'); return; }
+  const ctx = { ...addContext(), ...o };
+  const looksImg = isImageURL(u);
+  try {
+    const res = await fetch(u, { mode: 'cors' }); const ct = res.headers.get('content-type') || '';
+    if (res.ok && ct.startsWith('image/')) { const r = await createRefFromBlob(await res.blob(), { ...ctx, url: u, title: cleanName(decodeURIComponent(u.split('/').pop().split('?')[0])) || hostOf(u) }); render(); maybeAnalyze(r); return r; }
+  } catch { /* CORS или это страница */ }
+  if (looksImg) {
+    try { const img = await loadImg(u, true); const b = await toBlob(canvasFrom(img, 0, 0, img.naturalWidth, img.naturalHeight, img.naturalWidth, img.naturalHeight), 'image/png'); const r = await createRefFromBlob(b, { ...ctx, url: u, title: hostOf(u) }); render(); maybeAnalyze(r); return r; } catch { /* нет CORS */ }
+    const r = normalizeRef({ id: uid(), createdAt: Date.now(), title: hostOf(u) || 'Изображение', titleAuto: true, url: u, type: ctx.type || '', typeLocked: !!ctx.type, boards: ctx.board ? [ctx.board] : [], hasImg: false, remote: u, cover: 'upload', ai: { status: 'none' } });
+    S.refs.unshift(r); await saveRef(r); render(); maybeAnalyze(r); return r;
+  }
+  const r = normalizeRef({ id: uid(), createdAt: Date.now(), title: hostOf(u) || 'Ссылка', titleAuto: true, url: u, type: ctx.type || '', typeLocked: !!ctx.type, boards: ctx.board ? [ctx.board] : [], hasImg: false, remote: shotURL(u), cover: 'link', ai: { status: 'none' } });
+  S.refs.unshift(r); await saveRef(r); render();
+  await shootLink(r); return r;
+}
+function openAdd() {
+  const ctx = addContext(); const b = ctx.board ? boardById(ctx.board) : null;
+  const m = modal({
+    title: 'Добавить референсы',
+    body: `<div class="dz" id="dz" tabindex="0">${I.upload}<b>Перетащите скриншоты сюда</b><span>или нажмите, чтобы выбрать файлы. Картинку из буфера можно вставить сочетанием Ctrl+V</span></div>
+    <label class="f"><span>Ссылки, по одной в строке</span><textarea class="inp" id="add-urls" rows="3" placeholder="https://"></textarea></label>
+    <div class="hint">Для ссылки анализ идёт в первую очередь по самой странице, а обложкой станет скриншот её первого экрана. Прямая ссылка на картинку сохранится как изображение.</div>
+    <div class="grid2"><label class="f"><span>Тип материала</span><select class="inp" id="add-type"><option value="">Определит нейросеть</option>${S.types.map(t => `<option value="${t.id}">${esc(t.name)}</option>`).join('')}</select></label>
+    ${b ? `<label class="chk" style="margin-top:34px"><input type="checkbox" id="add-board" checked>На доску «${esc(b.name)}»</label>` : ''}</div>
+    ${providerReady() ? '' : '<div class="hint">Автоматическая разметка выключена: <button class="lnk" data-act="settings">подключите нейросеть в настройках</button>.</div>'}`,
+    foot: `<button class="btn" data-close>Отмена</button><button class="btn primary" id="add-go">Добавить ссылки</button>`,
+  });
+  const opts = () => ({ type: m.q('#add-type').value, board: m.q('#add-board')?.checked ? ctx.board : null });
+  const dz = m.q('#dz'); const pick = $('#filepick');
+  dz.onclick = () => { pick.onchange = () => { const o = opts(); m.close(); addFiles(pick.files, o); pick.value = ''; }; pick.click(); };
+  dz.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); dz.click(); } };
+  dz.ondragover = e => { e.preventDefault(); e.stopPropagation(); dz.classList.add('over'); };
+  dz.ondragleave = () => dz.classList.remove('over');
+  dz.ondrop = e => { e.preventDefault(); e.stopPropagation(); hideVeil(); const o = opts(); m.close(); addFiles(e.dataTransfer.files, o); };
+  m.q('#add-go').onclick = async () => {
+    const urls = m.q('#add-urls').value.split(/\s+/).filter(Boolean); if (!urls.length) { m.q('#add-urls').focus(); return; }
+    const o = opts(); m.close(); toast(urls.length === 1 ? 'Добавляю ссылку…' : `Добавляю ссылки: ${urls.length}`);
+    for (const u of urls) await addUrl(u, o);
+  };
+  m.el.addEventListener('paste', e => {
+    const files = [...(e.clipboardData?.files || [])]; if (files.length) { e.preventDefault(); e.stopPropagation(); const o = opts(); m.close(); addFiles(files, o); }
+  });
+}
+
+/* ---------- нейросеть ---------- */
+function providerReady() {
+  const s = S.settings;
+  if (s.provider === 'claude') return !!s.claudeKey;
+  if (s.provider === 'openai') return !!s.openaiKey;
+  if (s.provider === 'custom') return !!(s.customBase && s.customModel);
+  return !!s.ollamaHost;
+}
+const currentModel = () => ({ claude: S.settings.claudeModel, openai: S.settings.openaiModel, ollama: S.settings.ollamaModel, custom: S.settings.customModel }[S.settings.provider]);
+const providerLabel = (p, r) => p === 'custom' ? (r?.ai?.providerName || S.settings.customName || 'Своя модель') : PROV_NAME[p] || p || '';
+function maybeAnalyze(r, force) {
+  if (PUB || r.shot === 'pending') return;
+  if (!S.settings.autoAnalyze && !force) return;
+  if (!providerReady()) return;
+  enqueue(r.id);
+}
+function enqueue(id) {
+  const r = refById(id); if (!r) return;
+  if (!providerReady()) { toast('Подключите нейросеть в настройках, чтобы проставлять теги', 'err'); openSettings('ai'); return; }
+  if (r.shot === 'pending') { toast('Скриншот страницы ещё готовится — анализ начнётся сам'); return; }
+  if (S.queue.includes(id) || r.ai?.status === 'running') return;
+  r.ai = { ...(r.ai || {}), status: 'pending', error: '' }; S.queue.push(id);
+  updateCard(r); if (S.openId === id) renderDetail(); pump();
+}
+/* Провайдер перегружен (429 / лимит): ставим всю очередь на паузу до сброса лимита. */
+const RATE_RE = /\b429\b|rate[\s-]?limit|too many requests|capacity (is )?(currently )?saturated|upstream capacity|quota exceeded|temporarily unavailable|overloaded/i;
+function rateWait(text, header) {
+  if (header) { const n = +header; if (n > 0) return clamp(n * 1000, 5000, 600000); }
+  const t = String(text || '');
+  let m = t.match(/in\s+(\d+)\s*m(in)?\b/i); if (m) return clamp(+m[1] * 60000 + 5000, 15000, 600000);
+  m = t.match(/in\s+(\d+)\s*s(ec)?\b/i) || t.match(/retry[\s-]?after[:\s]+(\d+)/i); if (m) return clamp(+m[1] * 1000 + 3000, 5000, 600000);
+  return 60000;
+}
+let pumpTimer = null;
+const maxParallel = () => ['custom', 'ollama'].includes(S.settings.provider) ? 1 : 2;
+function pump() {
+  const wait = (S.pauseUntil || 0) - Date.now();
+  if (wait > 0) { clearTimeout(pumpTimer); pumpTimer = setTimeout(pump, wait + 50); renderQueue(); return; }
+  while (S.running < maxParallel() && S.queue.length) {
+    const id = S.queue.shift(); S.running++;
+    analyze(id).finally(() => { S.running--; renderQueue(); pump(); });
+  }
+  renderQueue();
+}
+function vocab(k, n = 50) {
+  const m = new Map(); for (const r of S.refs) for (const v of r.tags[k] || []) m.set(low(v), [v, (m.get(low(v))?.[1] || 0) + 1]);
+  return [...m.values()].sort((a, b) => b[1] - a[1]).slice(0, n).map(x => x[0]);
+}
+const useWebFetch = r => S.settings.provider === 'claude' && S.settings.webFetch !== false && isPageLink(r);
+function buildPrompt(r, manifest) {
+  const lang = S.settings.lang === 'en' ? 'English' : 'Russian';
+  const style = vocab('style'), dir = vocab('direction');
+  const imgs = manifest.map(m => '  - ' + m).join('\n');
+  const source = isPageLink(r)
+    ? `ANALYSIS PRIORITY — MANDATORY RULE:
+This reference has a source link: ${r.url}
+The live resource behind this link is the PRIMARY subject of the whole analysis. Describe the resource itself (the site, product page, app or case study), not just one picture.
+${useWebFetch(r) ? '- First, fetch this URL with the web_fetch tool and read the page. Prefer facts from the page over visual guessing: real typeface names (font-family names, Google Fonts / Adobe Fonts links if present), colors, copy, structure, components, what the product is.\n' : '- If you have a tool that opens web pages (web fetch, browser, HTTP request), open this URL first and read the page — rendered page, HTML and CSS. Prefer facts from the page over visual guessing: real font-family names and font files, colors from CSS, copy, structure, components, what the product is. If you cannot open it, analyze the images below.\n'}- Read-only task: do not create or change files, do not send messages, do not take any action beyond reading pages and answering.
+- The attached images are renders of that link and secondary material:
+${imgs}
+- If a user screenshot disagrees with the live page, trust the live page.`
+    : `ANALYSIS SOURCE — MANDATORY RULE:
+This reference has no source link. The attached screenshot is the only source: base the entire analysis on it.
+${imgs}`;
+  return `You are a senior design analyst cataloguing design references for a designer's library.
+${source}
+Return ONLY one JSON object as your final answer. No markdown, no comments.
+
+Context:
+- Material types to choose from: ${JSON.stringify(S.types.map(t => t.name))}. Put the best fit into "type" exactly as written. Only if none fits at all, propose a new short type name.
+- Existing tag vocabulary — reuse these exact spellings when they apply, add new tags only when needed. style: ${JSON.stringify(style)}; direction: ${JSON.stringify(dir)}
+${r.palette?.length ? `- Dominant colors measured from the pixels of the cover image: ${JSON.stringify(r.palette.map(p => p.hex + ' ' + p.p + '%'))}. Prefer these exact hex values in designSystem.colors when they correspond.\n` : ''}- Write all human-readable values (title, description, tags, notes, descriptions) in ${lang}. Keep established movement names, technique names and typeface names in their usual original form (e.g. "Swiss Style", "Bauhaus", "Inter").
+
+JSON shape:
+{
+ "title": "short descriptive name, 2-6 words",
+ "type": "one of the material types",
+ "description": "1-2 sentences: what it is and what makes it notable as a reference",
+ "style": ["3-6 visual style tags, e.g. minimalism, brutalism, Swiss Style, retro-futurism, glassmorphism, editorial"],
+ "direction": ["2-5 graphic direction tags — the main graphic means: photography, 3D, vector illustration, type-driven, collage, gradients, pixel art, abstract geometry, hand-drawn"],
+ "keywords": ["3-8 other useful tags: industry, mood, notable techniques, layout patterns"],
+ "fonts": [{"name": "best guess of the exact typeface", "category": "sans-serif|serif|monospace|display|script|slab|handwritten", "role": "where it is used", "confidence": 0.0, "alternatives": ["up to 3 similar typefaces, prefer Google Fonts"]}],
+ "designSystem": {}
+}
+
+designSystem rules — build it ONLY from elements that actually exist in the source:
+- Include a key only when that kind of element is clearly present. Omit absent keys entirely: no empty arrays, no nulls, no placeholders, no guesses. A poster without UI has no components, no spacing and no grid unless clearly expressed. No buttons present → no button components.
+- Possible keys:
+  "colors": [{"hex": "#RRGGBB", "name": "", "role": "primary|secondary|accent|background|surface|text|muted|border|success|warning|error|decorative"}] (3-10)
+  "gradients": [{"css": "valid CSS gradient", "name": ""}]
+  "typography": [{"role": "display|h1|h2|h3|body|caption|label|button|nav|numeric|logo", "font": "", "weight": 400, "size": "48px", "lineHeight": "", "letterSpacing": "", "case": "none|uppercase|lowercase|capitalize"}]
+  "spacing": {"base": "8px", "scale": ["8px", "16px"], "notes": ""}
+  "radii": [{"name": "", "value": "8px", "usage": ""}]
+  "shadows": [{"name": "", "css": "valid box-shadow", "usage": ""}]
+  "borders": [{"css": "valid border shorthand", "usage": ""}]
+  "grid": {"columns": 12, "gutter": "", "margin": "", "maxWidth": "", "notes": ""}
+  "components": [{"name": "", "kind": "button|input|card|nav|badge|chip|tabs|toggle|checkbox|radio|slider|avatar|tooltip|modal|table|list|search|pagination|progress|other", "description": "", "styles": {"background": "", "color": "", "border": "", "borderRadius": "", "padding": "", "boxShadow": "", "fontFamily": "", "fontWeight": "", "fontSize": "", "textTransform": ""}}] (only distinct components that are present, max 8)
+  "iconography": {"style": "", "stroke": "", "notes": ""}
+  "imagery": {"style": "", "treatment": ""}
+  "illustration": {"style": "", "notes": ""}
+  "motifs": ["recurring graphic elements, patterns, shapes"]
+  "layout": {"composition": "", "density": "airy|balanced|dense", "notes": ""}
+- Font names: give the real typeface if you can identify it; otherwise the closest well-known typeface with lower confidence.`;
+}
+async function aiFetch(url, opt, label) {
+  let res;
+  try { res = await fetch(url, opt); }
+  catch {
+    throw new Error(label === 'ollama' ? `Нет связи с Ollama по адресу ${S.settings.ollamaHost}. Проверьте, что Ollama запущена; если запущена — перезапустите её с переменной OLLAMA_ORIGINS=*`
+      : label === 'custom' ? (S.settings.customProxy
+        ? `Нет связи с прокси ${S.settings.customProxy}. Проверьте его адрес и что адрес API добавлен в список ALLOWED в коде прокси.`
+        : /^https?:\/\/(localhost|127\.0\.0\.1|0\.0\.0\.0|\[::1\])(:|\/|$)/i.test(S.settings.customBase.trim())
+        ? `${S.settings.customBase} не отвечает браузеру. Проверьте, что локальный сервер запущен (для Hermes — команда hermes gateway) и что в его настройках CORS разрешён адрес этой страницы: ${location.protocol === 'file:' ? 'null' : location.origin} (для Hermes — API_SERVER_CORS_ORIGINS).`
+        : `${S.settings.customBase} не отвечает браузеру. Скорее всего, сервис запрещает запросы со страниц (CORS). Включите прокси: Настройки → Нейросеть → Своя модель → «Прокси».`)
+      : 'Нет связи с сервером нейросети. Проверьте интернет.');
+  }
+  const raw = await res.text().catch(() => '');
+  let j = {};
+  try { j = raw ? JSON.parse(raw) : {}; }
+  catch {
+    /* Некоторые серверы (агенты) отвечают потоком SSE даже без stream: true — собираем текст из кусочков. */
+    if (/^\s*(data|event):/m.test(raw)) {
+      let text = '';
+      for (const line of raw.split('\n')) {
+        const m = line.match(/^data:\s*(.*)$/); if (!m || m[1].trim() === '[DONE]') continue;
+        try { const d = JSON.parse(m[1]); const c = d.choices?.[0]; text += (c?.delta?.content ?? c?.message?.content ?? '') || d.delta?.text || d.output_text || ''; } catch { /* служебная строка */ }
+      }
+      j = { choices: [{ message: { content: text } }] };
+    } else j = { choices: [{ message: { content: raw } }], _raw: true };
+  }
+  if (!res.ok) {
+    const msg = j.error?.message || (typeof j.error === 'string' ? j.error : '') || j.message || j.detail || ('HTTP ' + res.status);
+    if (res.status === 401) throw new Error('Ключ API не подошёл. Проверьте его в настройках.');
+    if (res.status === 429 || res.status === 529 || (res.status === 503 && RATE_RE.test(String(msg)))) { const e = new Error('Провайдер модели перегружен или исчерпан лимит: ' + String(msg).slice(0, 160)); e.rate = rateWait(msg, res.headers.get('retry-after')); throw e; }
+    const e = new Error(String(typeof msg === 'string' ? msg : JSON.stringify(msg)).slice(0, 300)); e.status = res.status; throw e;
+  }
+  return j;
+}
+/* Адрес своей модели. Прокси ставится перед адресом: https://прокси/https://api.сервис/v1/chat/completions */
+function customURL() {
+  const s = S.settings; const base = s.customBase.trim().replace(/\/+$/, '');
+  const url = s.customFormat === 'anthropic'
+    ? (/\/messages$/.test(base) ? base : /\/v1$/.test(base) ? base + '/messages' : base + '/v1/messages')
+    : (/\/chat\/completions$/.test(base) ? base : base + '/chat/completions');
+  const px = (s.customProxy || '').trim().replace(/\/+$/, '');
+  return px ? px + '/' + url : url;
+}
+function customHeaders() {
+  const s = S.settings; const h = { 'content-type': 'application/json' };
+  if (s.customFormat === 'anthropic') { h['anthropic-version'] = '2023-06-01'; h['anthropic-dangerous-direct-browser-access'] = 'true'; if (s.customKey) { h['x-api-key'] = s.customKey; h.authorization = 'Bearer ' + s.customKey; } }
+  else if (s.customKey) h.authorization = 'Bearer ' + s.customKey;
+  return h;
+}
+/* Код прокси для Cloudflare Workers: пропускает запросы только к разрешённым адресам и добавляет заголовки CORS. */
+function proxyCode() {
+  let host = ''; try { host = new URL(S.settings.customBase).hostname; } catch {}
+  return `// Прокси для Refbase: разрешает браузеру обращаться к API нейросети (CORS).
+// Разрешённые сервисы. Чтобы подключить другой, добавьте его адрес в список.
+const ALLOWED = [${JSON.stringify(host || 'api.example.com')}];
+
+export default {
+  async fetch(req) {
+    const cors = {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+      'Access-Control-Allow-Headers': req.headers.get('Access-Control-Request-Headers') || '*',
+      'Access-Control-Max-Age': '86400',
+    };
+    if (req.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors });
+    const self = new URL(req.url);
+    let target;
+    try { target = new URL(req.url.slice(self.origin.length + 1)); }
+    catch { return new Response('Прокси работает. Формат: /https://api.example.com/v1/...', { status: 200, headers: cors }); }
+    if (target.protocol !== 'https:' || !ALLOWED.includes(target.hostname))
+      return new Response('Адрес не разрешён: ' + target.hostname, { status: 403, headers: cors });
+    const headers = new Headers(req.headers);
+    for (const k of [...headers.keys()]) if (/^(origin|referer|host|cf-|x-forwarded|x-real-ip)/i.test(k)) headers.delete(k);
+    const res = await fetch(target, { method: req.method, headers, body: req.method === 'GET' ? undefined : req.body });
+    const out = new Headers(res.headers);
+    for (const [k, v] of Object.entries(cors)) out.set(k, v);
+    return new Response(res.body, { status: res.status, headers: out });
+  },
+};
+`;
+}
+const msgText = c => Array.isArray(c) ? c.map(p => p.text || '').join('') : String(c || '');
+async function openaiCall(url, key, model, images, prompt, label, jsonMode = true, history = []) {
+  const content = [{ type: 'text', text: prompt }, ...images.map(im => ({ type: 'image_url', image_url: { url: im.url || `data:${im.mime};base64,${im.data}` } }))];
+  const headers = { 'content-type': 'application/json' }; if (key) headers.authorization = 'Bearer ' + key;
+  const body = { model, stream: false, messages: [{ role: 'user', content }, ...history] }; if (jsonMode) body.response_format = { type: 'json_object' };
+  try {
+    const j = await aiFetch(url, { method: 'POST', headers, body: JSON.stringify(body) }, label); const m = j.choices?.[0]?.message || {};
+    return { text: msgText(m.content) || msgText(m.reasoning_content) || msgText(m.reasoning) || (j.output_text || '') };
+  }
+  catch (e) { if (jsonMode && (e.status === 400 || e.status === 422 || (e.status > 400 && e.status < 500 && /response_format|json/i.test(e.message)))) return openaiCall(url, key, model, images, prompt, label, false, history); throw e; }
+}
+/* Anthropic Messages API. С web fetch Claude сам открывает страницу по ссылке на стороне Anthropic. */
+async function anthropicCall(url, headers, model, images, prompt, label, tools, history = []) {
+  const content = [...images.map(im => im.url ? { type: 'image', source: { type: 'url', url: im.url } } : { type: 'image', source: { type: 'base64', media_type: im.mime, data: im.data } }), { type: 'text', text: prompt }];
+  const messages = [{ role: 'user', content }, ...history]; let fetched = false;
+  for (let i = 0; i < 5; i++) {
+    const body = { model, max_tokens: 8000, messages }; if (tools) body.tools = tools;
+    let j;
+    try { j = await aiFetch(url, { method: 'POST', headers, body: JSON.stringify(body) }, label); }
+    catch (e) { if (tools && e.status === 400 && /tool|fetch|beta/i.test(e.message)) { tools = null; continue; } throw e; }
+    const blocks = j.content || [];
+    if (blocks.some(b => b.type === 'web_fetch_tool_result' && b.content?.type === 'web_fetch_result')) fetched = true;
+    if (j.stop_reason === 'pause_turn') { messages.push({ role: 'assistant', content: blocks }); continue; }
+    let last = -1; blocks.forEach((b, k) => { if (b.type === 'server_tool_use' || b.type === 'web_fetch_tool_result') last = k; });
+    const text = blocks.slice(last + 1).filter(b => b.type === 'text').map(b => b.text).join('') || blocks.filter(b => b.type === 'text').map(b => b.text).join('');
+    return { text, fetched };
+  }
+  throw new Error('Нейросеть не завершила ответ');
+}
+async function callAI(images, prompt, r, history = []) {
+  const s = S.settings;
+  if (s.provider === 'claude') {
+    const tools = r && useWebFetch(r) ? [{ type: 'web_fetch_20250910', name: 'web_fetch', max_uses: 3, max_content_tokens: 30000 }] : null;
+    return anthropicCall('https://api.anthropic.com/v1/messages', { 'content-type': 'application/json', 'x-api-key': s.claudeKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' }, s.claudeModel, images, prompt, 'claude', tools, history);
+  }
+  if (s.provider === 'openai') return openaiCall('https://api.openai.com/v1/chat/completions', s.openaiKey, s.openaiModel, images, prompt, 'openai', true, history);
+  if (s.provider === 'custom') {
+    if (s.customFormat === 'anthropic') return anthropicCall(customURL(), customHeaders(), s.customModel, images, prompt, 'custom', null, history);
+    return openaiCall(customURL(), s.customKey, s.customModel, images, prompt, 'custom', true, history);
+  }
+  const local = images.filter(i => !i.url);
+  if (!local.length) throw new Error('Локальной модели нужен сам скриншот: откройте карточку и нажмите «Добавить свой скриншот»');
+  const j = await aiFetch(s.ollamaHost.replace(/\/+$/, '') + '/api/chat', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ model: s.ollamaModel, stream: false, format: 'json', options: { temperature: 0.2, num_predict: 4096 }, messages: [{ role: 'user', content: prompt, images: local.map(i => i.data) }, ...history] }) }, 'ollama');
+  return { text: j.message?.content || '' };
+}
+/* Ответ может быть обёрнут в текст (агенты любят пояснять ход работы): ищем JSON-объект с полями референса. */
+function parseJSON(t) {
+  t = String(t || '');
+  const tries = [];
+  for (const m of t.matchAll(/```(?:json)?\s*([\s\S]*?)```/gi)) tries.push(m[1]);
+  const b = t.lastIndexOf('}');
+  if (b > 0) { let a = t.indexOf('{'), n = 0; while (a >= 0 && a < b && n++ < 40) { tries.push(t.slice(a, b + 1)); a = t.indexOf('{', a + 1); } }
+  let fallback = null;
+  for (const c of tries) {
+    try { const o = JSON.parse(c.trim()); if (o && typeof o === 'object' && !Array.isArray(o)) { if ('title' in o || 'style' in o || 'designSystem' in o) return o; fallback = fallback || o; } } catch { /* следующий вариант */ }
+  }
+  if (fallback) return fallback;
+  throw new Error(tries.length ? 'Не удалось разобрать ответ нейросети' : 'Нейросеть вернула ответ не в том формате');
+}
+const strArr = (x, n = 12) => Array.isArray(x) ? [...new Map(x.filter(v => typeof v === 'string' && v.trim()).map(v => [low(v), v.trim().slice(0, 60)])).values()].slice(0, n) : [];
+const str = (v, n = 400) => typeof v === 'string' ? v.trim().slice(0, n) : typeof v === 'number' ? String(v) : '';
+function cleanDS(v) {
+  if (Array.isArray(v)) { const a = v.map(cleanDS).filter(x => x !== undefined); return a.length ? a : undefined; }
+  if (v && typeof v === 'object') { const o = {}; for (const [k, x] of Object.entries(v)) { const c = cleanDS(x); if (c !== undefined) o[k] = c; } return Object.keys(o).length ? o : undefined; }
+  if (v === null || v === undefined || v === '' || v === false) return undefined;
+  if (typeof v === 'string') return v.trim() ? v.trim().slice(0, 300) : undefined;
+  return v;
+}
+function normDS(raw) {
+  const ds = cleanDS(raw) || {};
+  if (ds.colors) { ds.colors = (Array.isArray(ds.colors) ? ds.colors : []).filter(c => c && isHex(c.hex)).map(c => ({ ...c, hex: c.hex.toUpperCase() })).slice(0, 12); if (!ds.colors.length) delete ds.colors; }
+  for (const k of ['gradients', 'typography', 'radii', 'shadows', 'borders', 'components', 'motifs']) if (ds[k] && !Array.isArray(ds[k])) delete ds[k];
+  if (ds.components) ds.components = ds.components.filter(c => c && (c.name || c.kind)).slice(0, 10);
+  if (ds.typography) ds.typography = ds.typography.filter(t => t && t.font).slice(0, 10);
+  if (ds.motifs) ds.motifs = strArr(ds.motifs, 10);
+  for (const k of Object.keys(ds)) if (ds[k] == null || (Array.isArray(ds[k]) && !ds[k].length)) delete ds[k];
+  return Object.keys(ds).length ? ds : null;
+}
+function matchType(name) {
+  const n = low(name); if (!n) return '';
+  const t = S.types.find(t => low(t.name) === n) || S.types.find(t => low(t.name).includes(n) || n.includes(low(t.name)));
+  if (t) return t.id;
+  const nt = { id: 't' + uid(), name: name.trim().slice(0, 40) }; S.types.push(nt); saveTypes(); return nt.id;
+}
+function applyAI(r, d) {
+  r.tags = { style: strArr(d.style, 8), direction: strArr(d.direction, 6), keywords: strArr(d.keywords, 12) };
+  r.description = str(d.description, 500);
+  if (r.titleAuto && str(d.title)) r.title = str(d.title, 80);
+  if (!r.typeLocked && str(d.type)) r.type = matchType(str(d.type, 60));
+  r.fonts = (Array.isArray(d.fonts) ? d.fonts : []).filter(f => f && str(f.name)).slice(0, 6).map(f => ({ name: str(f.name, 60), category: str(f.category, 30), role: str(f.role, 80), confidence: clamp(+f.confidence || 0, 0, 1), alternatives: strArr(f.alternatives, 4) }));
+  r.ds = normDS(d.designSystem || d.design_system);
+}
+const FIX_PROMPT = 'Your previous reply did not contain the required JSON object. Reply now with ONLY that single JSON object in the exact shape described above (keys: title, type, description, style, direction, keywords, fonts, designSystem). No explanations, no markdown, no text before or after it. If you cannot see the images, still return the JSON based on what you could read from the link and say so in "description".';
+function rawErr(msg, raw) { const e = new Error(msg); e.raw = raw; return e; }
+async function analyze(id) {
+  const r = refById(id); if (!r) return;
+  r.ai = { status: 'running', rateTries: r.ai?.rateTries || 0 }; updateCard(r); if (S.openId === id) renderDetail();
+  try {
+    const { parts, manifest } = await aiImages(r);
+    const prompt = buildPrompt(r, manifest);
+    let res = await callAI(parts, prompt, r), data;
+    const limited = t => { if (RATE_RE.test(String(t || '')) && String(t).length < 3000) { const e = new Error('Провайдер модели перегружен или исчерпан лимит запросов'); e.rate = rateWait(t); e.raw = String(t); throw e; } };
+    try { data = parseJSON(res.text); }
+    catch {
+      limited(res.text);
+      /* Модель ответила текстом: один раз просим вернуть только JSON. */
+      const first = String(res.text || '');
+      const res2 = await callAI(parts, prompt, r, [{ role: 'assistant', content: first.trim() ? first.slice(0, 12000) : '(empty reply)' }, { role: 'user', content: FIX_PROMPT }]);
+      try { data = parseJSON(res2.text); res = { ...res2, fetched: res.fetched || res2.fetched }; }
+      catch {
+        limited(res2.text);
+        const both = `${first.trim() || '(пустой ответ)'}\n\n——— ответ на повторную просьбу вернуть JSON ———\n\n${String(res2.text || '').trim() || '(пустой ответ)'}`;
+        throw rawErr(!first.trim() && !String(res2.text || '').trim() ? 'Модель вернула пустой ответ' : 'Модель ответила текстом вместо данных, даже после повторной просьбы. Нажмите «Ответ модели», чтобы увидеть причину.', both);
+      }
+    }
+    applyAI(r, data);
+    r.ai = { status: 'done', provider: S.settings.provider, providerName: S.settings.provider === 'custom' ? (S.settings.customName || 'Своя модель') : undefined, model: currentModel(), at: Date.now(), source: isPageLink(r) ? 'link' : 'image', fetched: !!res.fetched };
+  } catch (e) {
+    const tries = (r.ai?.rateTries || 0) + 1;
+    if (e.rate && tries <= 6) {
+      /* Временная перегрузка: ждём и повторяем сами, без лишних запросов. */
+      S.pauseUntil = Math.max(S.pauseUntil || 0, Date.now() + e.rate);
+      r.ai = { status: 'pending', rateTries: tries, waitUntil: S.pauseUntil, raw: e.raw };
+      S.queue.unshift(id); await saveRef(r); updateCard(r); if (S.openId === id) renderDetail();
+      if (tries === 1) toast(`Провайдер модели перегружен. Анализ продолжится сам в ${new Date(S.pauseUntil).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}`);
+      return;
+    }
+    r.ai = { status: 'error', error: e.rate ? 'Провайдер модели перегружен: 6 попыток подряд не прошли. Попробуйте позже или подключите в Hermes резервного провайдера.' : String(e.message || e).slice(0, 300) };
+    if (e.raw) r.ai.raw = String(e.raw).slice(0, 20000);
+    toast('Анализ не удался: ' + r.ai.error, 'err');
+  }
+  if (!refById(id)) return;
+  await saveRef(r); updateCard(r); renderSide();
+  if (S.openId === id) renderDetail();
+  if (S.view === 'library' && S.group) renderContent();
+}
+function showRaw(r) {
+  const m = modal({ title: 'Ответ модели', wide: true,
+    body: `<p class="hint" style="margin-top:4px">Так модель ответила на запрос анализа. Частые причины: модель не видит изображения (текстовая), агент выполнил задачу по-своему и описал результат словами, ответ оборвался по лимиту длины.</p><pre class="log" style="max-height:52vh;white-space:pre-wrap;word-break:break-word">${esc(r.ai.raw || '')}</pre>`,
+    foot: `<button class="btn grow" id="raw-copy">Скопировать</button><button class="btn" data-close>Закрыть</button><button class="btn primary" id="raw-retry">${I.spark}Повторить анализ</button>` });
+  m.q('#raw-copy').onclick = () => copyText(r.ai.raw || '', 'Ответ скопирован');
+  m.q('#raw-retry').onclick = () => { m.close(); enqueue(r.id); };
+}
+async function testProvider(out) {
+  const s = S.settings; out.className = 'result'; out.textContent = 'Проверяю…';
+  try {
+    if (s.provider === 'claude') { await aiFetch('https://api.anthropic.com/v1/models?limit=1', { headers: { 'x-api-key': s.claudeKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' } }); out.textContent = 'Ключ работает.'; }
+    else if (s.provider === 'openai') { await aiFetch('https://api.openai.com/v1/models', { headers: { authorization: 'Bearer ' + s.openaiKey } }); out.textContent = 'Ключ работает.'; }
+    else if (s.provider === 'custom') {
+      if (!s.customBase || !s.customModel) throw new Error('Укажите адрес API и модель');
+      const body = s.customFormat === 'anthropic' ? { model: s.customModel, max_tokens: 16, messages: [{ role: 'user', content: 'Reply with OK' }] } : { model: s.customModel, messages: [{ role: 'user', content: 'Reply with OK' }] };
+      await aiFetch(customURL(), { method: 'POST', headers: customHeaders(), body: JSON.stringify(body) }, 'custom');
+      out.textContent = 'Модель ответила. Убедитесь, что она умеет работать с изображениями.';
+    }
+    else {
+      const j = await aiFetch(s.ollamaHost.replace(/\/+$/, '') + '/api/tags', {}, 'ollama'); const names = (j.models || []).map(m => m.name);
+      out.textContent = names.length ? `Ollama на связи. Установленные модели: ${names.join(', ')}` : 'Ollama на связи, но моделей нет. Выполните: ollama pull qwen3-vl:8b';
+      const dl = $('#ollama-models'); if (dl) dl.innerHTML = names.map(n => `<option value="${esc(n)}">`).join('');
+    }
+    out.classList.add('ok');
+  } catch (e) { out.textContent = e.message; out.classList.add('err'); }
+}
+
+/* ---------- публикация на GitHub Pages ---------- */
+class RateErr extends Error {}
+async function gitSha(bytes) {
+  if (!crypto?.subtle) return null;
+  const head = enc(`blob ${bytes.length}\0`); const all = new Uint8Array(head.length + bytes.length); all.set(head); all.set(bytes, head.length);
+  return [...new Uint8Array(await crypto.subtle.digest('SHA-1', all))].map(b => b.toString(16).padStart(2, '0')).join('');
+}
+function publicHTML() { return SOURCE_HTML.replace(/<html\b/i, '<html data-mode="public"'); }
+function publicRef(r, t, f) {
+  const o = { id: r.id, createdAt: r.createdAt, title: r.title, type: r.type, url: r.url, w: r.w, h: r.h, tw: r.tw, th: r.th, palette: r.palette, tags: r.tags, fonts: r.fonts, ds: r.ds, description: r.description, boards: r.boards };
+  if (t !== undefined) o.t = t; if (f) o.f = f; if (!r.hasImg && r.remote) o.remote = r.remote;
+  return o;
+}
+async function publish(log, progress) {
+  const g = S.settings.gh; const tok = g.token.trim(); if (!tok) throw new Error('Укажите токен GitHub в настройках');
+  const repoName = (g.repo || 'refs').trim().replace(/[^A-Za-z0-9._-]/g, '-');
+  async function gh(method, path, body, tries = 0) {
+    let res;
+    try { res = await fetch('https://api.github.com' + path, { method, cache: 'no-store', headers: { Accept: 'application/vnd.github+json', Authorization: 'Bearer ' + tok, 'X-GitHub-Api-Version': '2022-11-28', ...(body ? { 'Content-Type': 'application/json' } : {}) }, body: body ? JSON.stringify(body) : undefined }); }
+    catch { if (tries < 3) { await sleep(2000 * (tries + 1)); return gh(method, path, body, tries + 1); } throw new Error('Нет связи с GitHub'); }
+    if ((res.status === 403 || res.status === 429) && tries < 4) {
+      const txt = await res.clone().text();
+      if (/rate limit|abuse|secondary/i.test(txt) || res.status === 429) {
+        const ra = +res.headers.get('retry-after'); const reset = +res.headers.get('x-ratelimit-reset');
+        let wait = ra ? ra * 1000 : res.headers.get('x-ratelimit-remaining') === '0' && reset ? reset * 1000 - Date.now() + 1000 : 60000 * (tries + 1);
+        if (wait > 180000) throw new RateErr('limit');
+        log(`GitHub просит подождать ${Math.ceil(wait / 1000)} с…`); await sleep(wait); return gh(method, path, body, tries + 1);
+      }
+    }
+    if (res.status >= 500 && tries < 3) { await sleep(1500 * (tries + 1)); return gh(method, path, body, tries + 1); }
+    const j = res.status === 204 ? null : await res.json().catch(() => null);
+    if (!res.ok) {
+      const e = new Error(res.status === 401 ? 'GitHub не принял токен. Проверьте его в настройках.' : (j?.message || 'HTTP ' + res.status) + (res.status === 403 || res.status === 404 ? ' — проверьте права токена' : ''));
+      e.status = res.status; throw e;
+    }
+    return j;
+  }
+  log('Проверяю доступ к GitHub…'); progress(0.02);
+  const me = await gh('GET', '/user'); const owner = me.login;
+  let repo;
+  try { repo = await gh('GET', `/repos/${owner}/${repoName}`); }
+  catch (e) { if (e.status !== 404) throw e; log(`Создаю репозиторий ${repoName}…`); repo = await gh('POST', '/user/repos', { name: repoName, auto_init: true, description: 'Библиотека дизайн-референсов (Refbase)', has_issues: false, has_wiki: false, has_projects: false }); await sleep(3000); }
+  const branch = (g.branch || repo.default_branch || 'main').trim(); const base = `/repos/${owner}/${repoName}`;
+  let head;
+  try { head = (await gh('GET', `${base}/git/ref/heads/${branch}`)).object.sha; }
+  catch (e) {
+    if (e.status !== 404 && e.status !== 409) throw e;
+    log('Готовлю ветку ' + branch + '…');
+    await gh('PUT', `${base}/contents/README.md`, { message: 'Init', content: btoa('# Refs\n'), branch });
+    head = (await gh('GET', `${base}/git/ref/heads/${branch}`)).object.sha;
+  }
+  const commit = await gh('GET', `${base}/git/commits/${head}`);
+  const existing = new Map();
+  try { const t = await gh('GET', `${base}/git/trees/${commit.tree.sha}?recursive=1`); for (const it of t.tree || []) if (it.type === 'blob') existing.set(it.path, it.sha); } catch { /* пустое дерево */ }
+  const entries = []; let uploaded = 0, reused = 0, skipped = 0, budget = 220, rateHit = false;
+  const addEntry = (path, sha) => entries.push({ path, mode: '100644', type: 'blob', sha });
+  async function putBytes(path, bytes) {
+    const sha = await gitSha(bytes);
+    if (sha && existing.get(path) === sha) { addEntry(path, sha); reused++; return; }
+    const b = await gh('POST', `${base}/git/blobs`, { content: bytesToB64(bytes), encoding: 'base64' }); addEntry(path, b.sha); uploaded++;
+  }
+  const refs = [...S.refs].sort((a, b) => a.createdAt - b.createdAt); const withImg = refs.filter(r => r.hasImg);
+  const full = {};
+  for (let i = 0; i < withImg.length; i++) {
+    const r = withImg[i]; progress(0.05 + 0.75 * i / Math.max(1, withImg.length), `Изображения: ${i + 1} из ${withImg.length}`);
+    const blob = await getFile(r.id, 'web'); if (!blob) continue;
+    const path = `images/${r.id}.${extOf(blob.type)}`; const bytes = new Uint8Array(await blob.arrayBuffer()); const sha = await gitSha(bytes);
+    if (sha && existing.get(path) === sha) { addEntry(path, sha); reused++; full[r.id] = path; continue; }
+    if (rateHit || budget <= 0) { skipped++; continue; }
+    try { const b = await gh('POST', `${base}/git/blobs`, { content: bytesToB64(bytes), encoding: 'base64' }); addEntry(path, b.sha); uploaded++; budget--; full[r.id] = path; }
+    catch (e) { if (e instanceof RateErr || e.status === 403) { rateHit = true; skipped++; log('Достигнут лимит загрузок GitHub. Оставшиеся полноразмерные картинки догрузятся при следующей публикации, пока вместо них покажутся миниатюры.'); } else throw e; }
+  }
+  progress(0.82, 'Миниатюры');
+  const packs = []; const tIdx = {};
+  for (let i = 0; i < withImg.length; i += 40) {
+    const obj = {}; for (const r of withImg.slice(i, i + 40)) { const b = await getFile(r.id, 'thumb'); if (b) { obj[r.id] = await blobToDataURL(b); tIdx[r.id] = packs.length; } }
+    packs.push(obj);
+  }
+  for (let p = 0; p < packs.length; p++) { progress(0.84 + 0.08 * p / Math.max(1, packs.length), 'Миниатюры'); await putBytes(`thumbs/p${p}.json`, enc(JSON.stringify(packs[p]))); }
+  const at = Date.now();
+  const data = { app: 'refbase', version: 1, publishedAt: at, packs: packs.length, types: S.types, boards: S.boards, refs: refs.map(r => publicRef(r, tIdx[r.id], full[r.id])) };
+  progress(0.93, 'Данные и страница');
+  await putBytes('data.json', enc(JSON.stringify(data)));
+  await putBytes('index.html', enc(publicHTML()));
+  await putBytes('.nojekyll', enc('\n'));
+  await putBytes('README.md', enc(`# Библиотека референсов\n\nОпубликовано из Refbase. Сайт: https://${owner.toLowerCase()}.github.io/${repoName}/\n`));
+  progress(0.96, 'Сохраняю версию');
+  const tree = await gh('POST', `${base}/git/trees`, { tree: entries });
+  let changed = tree.sha !== commit.tree.sha;
+  if (changed) {
+    const c = await gh('POST', `${base}/git/commits`, { message: `Синхронизация ${new Date(at).toLocaleString('ru-RU')}`, tree: tree.sha, parents: [head] });
+    await gh('PATCH', `${base}/git/refs/heads/${branch}`, { sha: c.sha });
+  }
+  try { await gh('GET', `${base}/pages`); }
+  catch (e) {
+    if (e.status !== 404) log('Не удалось проверить GitHub Pages: ' + e.message);
+    else {
+      try { await gh('POST', `${base}/pages`, { source: { branch, path: '/' } }); log('GitHub Pages включён. Первый запуск сайта занимает 1–3 минуты.'); }
+      catch (e2) { log(`Не получилось включить Pages автоматически (${e2.message}). Откройте репозиторий → Settings → Pages и выберите ветку ${branch}.`); }
+    }
+  }
+  const url = low(repoName) === `${low(owner)}.github.io` ? `https://${low(owner)}.github.io/` : `https://${low(owner)}.github.io/${repoName}/`;
+  Object.assign(S.settings.gh, { owner, lastAt: at, url, partial: skipped > 0, branch });
+  await DB.put('meta', S.settings, 'settings'); renderPubDot();
+  progress(1, 'Готово');
+  return { url, uploaded, reused, skipped, changed };
+}
+function openPublish() {
+  const g = S.settings.gh;
+  if (!g.token) { openSettings('publish'); return; }
+  const dirty = S.lastChange > (g.lastAt || 0);
+  const m = modal({
+    title: 'Публикация на сайте',
+    body: `<div class="stat"><div><b>${S.refs.length}</b>${plural(S.refs.length, 'референс', 'референса', 'референсов')}</div><div><b>${S.boards.length}</b>${plural(S.boards.length, 'доска', 'доски', 'досок')}</div><div><b id="pb-last">${g.lastAt ? fmtDate(g.lastAt) : 'ещё не было'}</b>последняя публикация</div></div>
+    <p class="hint">${g.url ? `Адрес сайта: <a href="${esc(g.url)}" target="_blank" rel="noopener">${esc(g.url)}</a>` : `Сайт появится по адресу вида https://логин.github.io/${esc(g.repo || 'refs')}/`}${dirty && g.lastAt ? '<br>С прошлой публикации есть изменения.' : ''}${g.partial ? '<br>В прошлый раз загрузились не все полноразмерные картинки — опубликуйте ещё раз, чтобы догрузить.' : ''}</p>
+    <p class="hint">Публикуется копия только для просмотра: без ключей API, настроек и заметок. Репозиторий публичный — сайт увидит любой, у кого есть ссылка.</p>
+    <div class="prog" hidden id="pb-prog"><i></i></div><div class="hint" id="pb-step"></div><div class="log" id="pb-log" hidden></div><div id="pb-res"></div>`,
+    foot: `<button class="btn grow" data-act="settings-pub">Настройки GitHub</button><button class="btn" data-close>Закрыть</button><button class="btn primary" id="pb-go">${I.globe}Опубликовать</button>`,
+  });
+  const logEl = m.q('#pb-log');
+  const log = t => { logEl.hidden = false; logEl.textContent += (logEl.textContent ? '\n' : '') + t; logEl.scrollTop = logEl.scrollHeight; };
+  const progress = (p, step) => { m.q('#pb-prog').hidden = false; m.q('#pb-prog i').style.width = Math.round(p * 100) + '%'; if (step) m.q('#pb-step').textContent = step; };
+  m.q('#pb-go').onclick = async () => {
+    const btn = m.q('#pb-go'); btn.disabled = true; logEl.textContent = ''; m.q('#pb-res').innerHTML = '';
+    try {
+      const r = await publish(log, progress);
+      log(r.changed ? `Загружено файлов: ${r.uploaded}, без изменений: ${r.reused}.` : 'Изменений нет — сайт уже актуален.');
+      m.q('#pb-res').innerHTML = `<div class="box"><b>Опубликовано.</b> <a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.url)}</a><div class="hint">GitHub Pages обновляет сайт в течение 1–2 минут. ${r.skipped ? `Не загружено полноразмерных картинок: ${r.skipped} — опубликуйте ещё раз позже.` : ''}</div></div>`;
+      m.q('#pb-last').textContent = fmtDate(S.settings.gh.lastAt); toast('Опубликовано');
+    } catch (e) { log('Ошибка: ' + e.message); m.q('#pb-step').textContent = ''; toast('Публикация не удалась: ' + e.message, 'err'); }
+    btn.disabled = false;
+  };
+}
+
+/* ---------- настройки и данные ---------- */
+function openSettings(tab = 'ai') {
+  $$('.ov').forEach(o => o._close?.());
+  const m = modal({ title: 'Настройки', wide: true, body: '<div id="st-body"></div>' });
+  m.q('.dlg-h').insertAdjacentHTML('afterend', `<div class="tabs"><button data-t="ai">Нейросеть</button><button data-t="publish">Публикация</button><button data-t="data">Данные</button></div>`);
+  const s = S.settings;
+  const draw = t => {
+    $$('.tabs button', m.el).forEach(b => b.classList.toggle('on', b.dataset.t === t));
+    const body = m.q('#st-body');
+    if (t === 'ai') {
+      const p = s.provider; const untagged = S.refs.filter(r => r.ai?.status !== 'done' && r.ai?.status !== 'running' && r.ai?.status !== 'pending' && r.shot !== 'pending').length;
+      body.innerHTML = `<div class="prov">
+        <label><input type="radio" name="prov" value="claude" ${p === 'claude' ? 'checked' : ''}><b>Claude</b><small>Anthropic, по ключу API</small></label>
+        <label><input type="radio" name="prov" value="openai" ${p === 'openai' ? 'checked' : ''}><b>OpenAI</b><small>GPT, по ключу API</small></label>
+        <label><input type="radio" name="prov" value="ollama" ${p === 'ollama' ? 'checked' : ''}><b>Ollama</b><small>локально и бесплатно</small></label>
+        <label><input type="radio" name="prov" value="custom" ${p === 'custom' ? 'checked' : ''}><b>Своя модель</b><small>любая по API</small></label></div>
+      ${p === 'claude' ? `<label class="f"><span>Ключ API Anthropic</span><input class="inp" type="password" data-s="claudeKey" value="${esc(s.claudeKey)}" placeholder="sk-ant-…" autocomplete="off"></label>
+        <label class="f"><span>Модель</span><input class="inp" data-s="claudeModel" value="${esc(s.claudeModel)}" list="claude-models"></label><datalist id="claude-models"><option value="claude-sonnet-5-5"><option value="claude-opus-5-5"><option value="claude-haiku-5-5"></datalist>
+        <div class="hint">Ключ создаётся на <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener">console.anthropic.com</a>. Sonnet — баланс качества и цены, Opus точнее распознаёт шрифты, Haiku самый дешёвый.</div>
+        <label class="chk"><input type="checkbox" data-s="webFetch" ${s.webFetch !== false ? 'checked' : ''}>Открывать и читать страницу по ссылке (web fetch)</label>
+        <div class="hint">Для референсов со ссылкой Claude сам загрузит страницу и возьмёт из неё реальные названия шрифтов, цвета и структуру. Каждое чтение страницы оплачивается как обычные токены.</div>` : ''}
+      ${p === 'openai' ? `<label class="f"><span>Ключ API OpenAI</span><input class="inp" type="password" data-s="openaiKey" value="${esc(s.openaiKey)}" placeholder="sk-…" autocomplete="off"></label>
+        <label class="f"><span>Модель</span><input class="inp" data-s="openaiModel" value="${esc(s.openaiModel)}" list="openai-models"></label><datalist id="openai-models"><option value="gpt-5.5"><option value="gpt-5.4"><option value="gpt-5.4-mini"></datalist>
+        <div class="hint">Ключ создаётся на <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener">platform.openai.com</a>. Можно вписать любую модель с поддержкой изображений.</div>` : ''}
+      ${p === 'ollama' ? `<label class="f"><span>Адрес Ollama</span><input class="inp" data-s="ollamaHost" value="${esc(s.ollamaHost)}"></label>
+        <label class="f"><span>Модель</span><input class="inp" data-s="ollamaModel" value="${esc(s.ollamaModel)}" list="ollama-models"></label><datalist id="ollama-models"></datalist>
+        <div class="hint">Установите Ollama с <a href="https://ollama.com" target="_blank" rel="noopener">ollama.com</a> и скачайте модель со зрением командой <code>ollama pull qwen3-vl:8b</code>. Если приложение не может подключиться, запустите Ollama с переменной <code>OLLAMA_ORIGINS=*</code>. Локальные модели заметно хуже определяют шрифты.</div>` : ''}
+      ${p === 'custom' ? `<label class="f"><span>Название, чтобы отличать в карточках</span><input class="inp" data-s="customName" value="${esc(s.customName)}" placeholder="Например, Gemini через OpenRouter"></label>
+        <div class="grid2"><label class="f"><span>Формат API</span><select class="inp" data-s="customFormat"><option value="openai" ${s.customFormat !== 'anthropic' ? 'selected' : ''}>OpenAI-совместимый</option><option value="anthropic" ${s.customFormat === 'anthropic' ? 'selected' : ''}>Anthropic-совместимый</option></select></label>
+        <label class="f"><span>Модель</span><input class="inp" data-s="customModel" value="${esc(s.customModel)}" placeholder="идентификатор модели"></label></div>
+        <label class="f"><span>Адрес API</span><input class="inp" data-s="customBase" value="${esc(s.customBase)}" list="custom-bases" placeholder="https://…/v1"></label>
+        <datalist id="custom-bases"><option value="https://openrouter.ai/api/v1" label="OpenRouter"><option value="https://generativelanguage.googleapis.com/v1beta/openai" label="Google Gemini"><option value="https://api.mistral.ai/v1" label="Mistral"><option value="https://api.x.ai/v1" label="xAI Grok"><option value="https://api.groq.com/openai/v1" label="Groq"><option value="https://api.together.xyz/v1" label="Together"><option value="http://localhost:1234/v1" label="LM Studio"><option value="http://localhost:8642/v1" label="Hermes Agent"></datalist>
+        <label class="f"><span>Ключ API</span><input class="inp" type="password" data-s="customKey" value="${esc(s.customKey)}" placeholder="для локальных серверов можно оставить пустым" autocomplete="off"></label>
+        <label class="f"><span>Прокси, если сервис блокирует запросы из браузера</span><input class="inp" data-s="customProxy" value="${esc(s.customProxy)}" placeholder="https://refbase-proxy.ваш-логин.workers.dev"></label>
+        <details class="box"><summary style="cursor:pointer;font-weight:600">Как сделать прокси за 5 минут (бесплатно)</summary>
+        <ol class="steps"><li>Зарегистрируйтесь на <a href="https://dash.cloudflare.com/sign-up" target="_blank" rel="noopener">cloudflare.com</a>, тариф Free.</li>
+        <li>Откройте <b>Workers &amp; Pages → Create → Start with Hello World</b>, назовите воркер <b>refbase-proxy</b> и нажмите <b>Deploy</b>.</li>
+        <li>Нажмите <b>Edit code</b>, удалите всё и вставьте код прокси. Кнопка ниже копирует его уже с адресом вашего сервиса. Нажмите <b>Deploy</b>.</li>
+        <li>Скопируйте адрес воркера вида <code>https://refbase-proxy….workers.dev</code> в поле «Прокси» и нажмите «Проверить подключение».</li></ol>
+        <div class="row"><button class="btn sm" id="st-proxy">Скопировать код прокси</button></div>
+        <div class="hint">Ключ API проходит только через ваш собственный воркер. Бесплатного тарифа хватает примерно на 100 000 запросов в день.</div></details>
+        <div class="hint">Подходит любой сервис с OpenAI-совместимым API: <b>OpenRouter</b> (сотни моделей по одному ключу), <b>Google Gemini</b>, <b>Mistral</b>, <b>xAI</b>, <b>Groq</b>, <b>Together</b>, локальный <b>LM Studio</b>, агент <b>Hermes Agent</b> и другие. Адрес указывается до <code>/chat/completions</code>, модель — так, как она называется в каталоге сервиса. Модель должна понимать изображения, а сервис — принимать запросы из браузера.</div>` : ''}
+      <div class="row"><button class="btn sm" id="st-test">Проверить подключение</button></div><div id="st-test-res"></div>
+      <div class="box"><label class="f" style="margin-top:0"><span>Язык тегов и описаний</span><select class="inp" data-s="lang"><option value="ru" ${s.lang === 'ru' ? 'selected' : ''}>Русский</option><option value="en" ${s.lang === 'en' ? 'selected' : ''}>English</option></select></label>
+      <label class="chk"><input type="checkbox" data-s="autoAnalyze" ${s.autoAnalyze ? 'checked' : ''}>Анализировать автоматически при добавлении</label>
+      <div class="hint">Правило анализа: если у референса есть ссылка, анализ идёт в первую очередь по ссылке, а обложкой становится скриншот первого экрана страницы. Если ссылки нет, анализ и обложка — по вашему скриншоту.</div>
+      ${untagged ? `<div class="row"><button class="btn sm" id="st-all">${I.spark}Разметить без тегов: ${untagged}</button></div>` : ''}</div>
+      <p class="hint">Ключи хранятся только в этом браузере и никогда не публикуются.</p>`;
+      $$('input[name=prov]', body).forEach(i => i.onchange = () => { s.provider = i.value; saveSettings(); draw('ai'); });
+      m.q('#st-test').onclick = () => testProvider(m.q('#st-test-res'));
+      m.q('#st-proxy')?.addEventListener('click', () => { if (!S.settings.customBase) return toast('Сначала укажите адрес API', 'err'); copyText(proxyCode(), 'Код прокси скопирован'); });
+      m.q('#st-all')?.addEventListener('click', () => { if (!providerReady()) return toast('Сначала укажите ключ', 'err'); S.refs.filter(r => r.ai?.status !== 'done' && r.shot !== 'pending').forEach(r => enqueue(r.id)); m.close(); toast('Разметка запущена'); });
+    }
+    if (t === 'publish') {
+      const g = s.gh;
+      body.innerHTML = `<p class="hint" style="margin-top:12px">Опубликованная версия — это сайт только для просмотра на GitHub Pages. Он открывается с любого устройства и показывает состояние на момент последней публикации.</p>
+      <ol class="steps">
+        <li>Зарегистрируйтесь на <a href="https://github.com/signup" target="_blank" rel="noopener">github.com</a>, если аккаунта ещё нет.</li>
+        <li>Создайте токен: <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">Settings → Developer settings → Fine-grained tokens → Generate new token</a>. В «Repository access» выберите <b>All repositories</b>, в «Permissions» дайте <b>Administration</b>, <b>Contents</b> и <b>Pages</b> уровень <b>Read and write</b>. Срок действия — на ваше усмотрение.</li>
+        <li>Вставьте токен ниже и нажмите «Опубликовать» в верхней панели. Репозиторий и сайт приложение создаст само.</li>
+      </ol>
+      <label class="f"><span>Токен GitHub</span><input class="inp" type="password" data-gh="token" value="${esc(g.token)}" placeholder="github_pat_…" autocomplete="off"></label>
+      <div class="grid2"><label class="f"><span>Имя репозитория</span><input class="inp" data-gh="repo" value="${esc(g.repo)}"></label><label class="f"><span>Ветка</span><input class="inp" data-gh="branch" value="${esc(g.branch)}"></label></div>
+      <div class="hint">Сайт будет по адресу <b>https://ваш-логин.github.io/${esc(g.repo || 'refs')}/</b>. На бесплатном тарифе GitHub Pages работает только с публичными репозиториями.${g.url ? `<br>Текущий адрес: <a href="${esc(g.url)}" target="_blank" rel="noopener">${esc(g.url)}</a>` : ''}</div>
+      <div class="row"><button class="btn primary" id="st-pub">${I.globe}Перейти к публикации</button></div>`;
+      m.q('#st-pub').onclick = () => { m.close(); openPublish(); };
+    }
+    if (t === 'data') {
+      body.innerHTML = `<div class="stat" style="margin-top:14px"><div><b>${S.refs.length}</b>референсов</div><div><b>${S.boards.length}</b>досок</div><div><b id="st-usage">…</b>занято в браузере</div></div>
+      <p class="hint">База хранится в этом браузере на этом компьютере. Регулярно сохраняйте резервную копию: при очистке данных браузера база удалится. Ключи и токен в копию не попадают.</p>
+      <div class="row"><button class="btn" id="st-exp">Сохранить резервную копию</button><button class="btn" id="st-imp">Восстановить из копии</button></div>
+      <div class="box"><b>Опасная зона</b><div class="hint">Удаляет все референсы, доски и типы из этого браузера. Опубликованный сайт не изменится.</div><div class="row"><button class="btn danger sm" id="st-wipe">Удалить всё</button></div></div>`;
+      navigator.storage?.estimate?.().then(e => { const el = m.q('#st-usage'); if (el) el.textContent = (e.usage / 1048576).toFixed(1) + ' МБ'; }).catch(() => {});
+      m.q('#st-exp').onclick = exportBackup;
+      m.q('#st-imp').onclick = () => { const p = $('#importpick'); p.onchange = () => { const f = p.files[0]; p.value = ''; if (f) { m.close(); importBackup(f); } }; p.click(); };
+      m.q('#st-wipe').onclick = async () => { if (!(await confirmDlg('Удалить всю базу?', 'Все референсы, изображения, доски и типы будут удалены из этого браузера. Это нельзя отменить.', 'Удалить всё'))) return; for (const st of ['refs', 'boards', 'files']) await DB.clear(st); S.refs = []; S.boards = []; S.types = structuredClone(DEFAULT_TYPES); await saveTypes(); thumbCache.clear(); m.close(); S.view = 'library'; S.type = 'all'; render(); toast('База очищена'); };
+    }
+  };
+  m.el.addEventListener('click', e => { const b = e.target.closest('.tabs button'); if (b) draw(b.dataset.t); });
+  m.el.addEventListener('input', e => {
+    const k = e.target.dataset.s, gk = e.target.dataset.gh; if (!k && !gk) return;
+    if (k) s[k] = e.target.type === 'checkbox' ? e.target.checked : e.target.value.trim();
+    if (gk) s.gh[gk] = e.target.value.trim();
+    saveSettings();
+  });
+  m.el.addEventListener('change', e => { if (['lang', 'autoAnalyze', 'webFetch', 'customFormat'].includes(e.target.dataset.s)) { s[e.target.dataset.s] = e.target.type === 'checkbox' ? e.target.checked : e.target.value; saveSettings(); } });
+  draw(tab);
+}
+async function exportBackup() {
+  toast('Готовлю резервную копию…');
+  const parts = ['{"format":"refbase-backup","version":1,"exportedAt":', String(Date.now()), ',"types":', JSON.stringify(S.types), ',"boards":', JSON.stringify(S.boards), ',"refs":', JSON.stringify(S.refs), ',"files":{'];
+  let first = true;
+  for (const r of S.refs) for (const k of FILE_KINDS) {
+    const b = await getFile(r.id, k); if (!b) continue;
+    parts.push((first ? '' : ',') + JSON.stringify(r.id + ':' + k) + ':' + JSON.stringify(await blobToDataURL(b))); first = false;
+  }
+  parts.push('}}');
+  download(new Blob(parts, { type: 'application/json' }), `refbase-${new Date().toISOString().slice(0, 10)}.json`);
+}
+async function importBackup(file) {
+  let d; try { d = JSON.parse(await file.text()); } catch { return toast('Файл не читается как резервная копия', 'err'); }
+  if (d.format !== 'refbase-backup') return toast('Это не резервная копия Refbase', 'err');
+  const mode = await choiceDlg('Восстановить из копии', `В копии ${nRefs(d.refs?.length || 0)} и ${d.boards?.length || 0} ${plural(d.boards?.length || 0, 'доска', 'доски', 'досок')}. Заменить текущую базу или добавить к ней?`, [{ k: 'merge', label: 'Добавить к текущей' }, { k: 'replace', label: 'Заменить', cls: 'primary' }]);
+  if (!mode) return;
+  if (mode === 'replace') { for (const st of ['refs', 'boards', 'files']) await DB.clear(st); S.refs = []; S.boards = []; S.types = []; thumbCache.clear(); }
+  for (const t of d.types || []) if (!typeById(t.id)) S.types.push(t);
+  await saveTypes();
+  for (const b of d.boards || []) { if (!boardById(b.id)) S.boards.push(b); await DB.put('boards', b); }
+  for (const [k, v] of Object.entries(d.files || {})) await DB.put('files', dataURLToBlob(v), k);
+  for (const r of d.refs || []) { normalizeRef(r); if (r.ai?.status === 'running' || r.ai?.status === 'pending') r.ai = { status: 'none' }; S.refs = S.refs.filter(x => x.id !== r.id); S.refs.push(r); dropThumb(r.id); await DB.put('refs', r); }
+  S.refs.sort((a, b) => b.createdAt - a.createdAt); markChanged(); render(); toast('Восстановлено: ' + nRefs(d.refs?.length || 0));
+}
+
+/* ---------- события ---------- */
+const ACTIONS = {
+  'nav-library': () => { S.view = 'library'; closeSide(); render(); },
+  'nav-boards': () => { S.view = 'boards'; closeSide(); render(); },
+  type: a => { S.view = 'library'; S.type = a.dataset.id; closeSide(); render(); $('#content').scrollTop = 0; },
+  'type-add': () => addType(),
+  'type-edit': (a, e) => { e.stopPropagation(); editType(a.dataset.id); },
+  'board-open': a => { closeDetail(); S.view = 'board'; S.boardId = a.dataset.id; closeSide(); render(); $('#content').scrollTop = 0; },
+  'board-add': () => addBoard(),
+  'board-edit': a => editBoard(a.dataset.id),
+  'show-unsorted': () => { S.view = 'library'; S.type = 'all'; S.filters = [{ k: 'noboard', v: 'Без доски' }]; render(); },
+  filter: a => toggleFilter(a.dataset.k, a.dataset.v),
+  'filter-clear': () => { S.filters = []; S.q = ''; const q = $('#q'); if (q) q.value = ''; render(); },
+  'facet-more': a => { S.facetOpen[a.dataset.k] = !S.facetOpen[a.dataset.k]; renderSide(); },
+  open: a => openDetail(a.closest('.card').dataset.id),
+  boards: (a, e) => { e.stopPropagation(); const id = a.closest('.card').dataset.id; if ($('#pop')) { closePop(); return; } openBoardsPop(a, id); },
+  add: () => openAdd(),
+  publish: () => openPublish(),
+  settings: () => openSettings('ai'),
+  'settings-pub': () => openSettings('publish'),
+  burger: () => { const open = !$('#side').classList.contains('open'); $('#side').classList.toggle('open', open); $('#sidebd').classList.toggle('show', open); },
+  copy: a => copyText(a.dataset.v, 'Скопировано: ' + a.dataset.v.slice(0, 40)),
+  'd-close': () => closeDetail(),
+  'd-prev': () => stepDetail(-1),
+  'd-next': () => stepDetail(1),
+  'd-boards': a => openBoardsPop(a, S.openId),
+  'd-analyze': () => enqueue(S.openId),
+  'd-tag': a => { const k = a.dataset.k, v = a.dataset.v; closeDetail(); if (S.view === 'boards') S.view = 'library'; if (!isActive(k, v)) S.filters.push({ k, v }); render(); },
+  'd-tagdel': async (a, e) => { e.stopPropagation(); const r = refById(S.openId); r.tags[a.dataset.k] = r.tags[a.dataset.k].filter(t => t !== a.dataset.v); await saveRef(r); renderDetail(); updateCard(r); renderSide(); },
+  'd-fontdel': async a => { const r = refById(S.openId); r.fonts.splice(+a.dataset.i, 1); await saveRef(r); renderDetail(); renderSide(); },
+  'd-dsdel': async a => { const r = refById(S.openId); if (!r.ds) return; delete r.ds[a.dataset.k]; if (!Object.keys(r.ds).length) r.ds = null; await saveRef(r); renderDetail(); },
+  'd-css': () => { const r = refById(S.openId); copyText(dsToCSS(r.ds, r.title), 'CSS-переменные скопированы'); },
+  'd-json': () => { const r = refById(S.openId); copyText(JSON.stringify({ title: r.title, fonts: r.fonts, palette: r.palette, designSystem: r.ds }, null, 2), 'JSON скопирован'); },
+  'd-replace': () => { const p = $('#replacepick'); const id = S.openId; p.onchange = async () => { const f = p.files[0]; p.value = ''; const r = refById(id); if (f && r) { try { const link = isPageLink(r); await attachImage(r, f); if (!link) toast('Изображение заменено'); } catch (e) { toast(e.message, 'err'); } } }; p.click(); },
+  'd-raw': () => { const r = refById(S.openId); if (r?.ai?.raw) showRaw(r); },
+  'd-reshoot': () => { const r = refById(S.openId); if (r && isPageLink(r)) shootLink(r); },
+  'd-usershot-del': async () => { const r = refById(S.openId); await DB.del('files', r.id + ':user'); r.userShot = false; await saveRef(r); renderDetail(); },
+  'd-download': async () => { const r = refById(S.openId); const b = await getFile(r.id, 'orig'); if (b) download(b, cleanName(r.title) + '.' + extOf(b.type)); },
+  'd-delete': async () => {
+    const r = refById(S.openId); if (!(await confirmDlg('Удалить референс?', `«${esc(r.title)}» будет удалён из библиотеки и со всех досок.`))) return;
+    const next = (() => { const l = visibleRefs(); const i = l.findIndex(x => x.id === r.id); return l[i + 1] || l[i - 1]; })();
+    S.refs = S.refs.filter(x => x.id !== r.id); S.queue = S.queue.filter(x => x !== r.id); await DB.del('refs', r.id); await delFiles(r.id); dropThumb(r.id); markChanged();
+    closeDetail(); render(); toast('Референс удалён');
+    if (next) openDetail(next.id);
+  },
+};
+function closeSide() { $('#side').classList.remove('open'); $('#sidebd').classList.remove('show'); }
+function hideVeil() { $('#veil').classList.remove('show'); dragDepth = 0; }
+let dragDepth = 0;
+function bindGlobal() {
+  document.addEventListener('click', e => {
+    const a = e.target.closest('[data-act]'); if (!a) return;
+    const f = ACTIONS[a.dataset.act]; if (f) { if (a.tagName === 'A') return; e.preventDefault(); f(a, e); }
+  });
+  document.addEventListener('keydown', e => {
+    if (e.target.closest?.('.folder') && e.key === 'Enter') { e.target.click(); return; }
+    const typing = /INPUT|TEXTAREA|SELECT/.test(e.target.tagName);
+    if (e.key === 'Escape') {
+      if ($('#pop')) return closePop();
+      const ovs = $$('#layer .ov'); if (ovs.length) return ovs[ovs.length - 1]._close();
+      if (S.openId) return closeDetail();
+      if (typing) e.target.blur();
+      return;
+    }
+    if (typing) return;
+    if (e.key === '/' && !e.metaKey && !e.ctrlKey) { e.preventDefault(); $('#q')?.focus(); }
+    if (S.openId && !$$('#layer .ov').length) { if (e.key === 'ArrowLeft') stepDetail(-1); if (e.key === 'ArrowRight') stepDetail(1); }
+  });
+  document.addEventListener('input', debounce(e => { if (e.target.id === 'q') { S.q = e.target.value; renderContent(); renderSide(); } }, 140));
+  document.addEventListener('change', e => {
+    if (e.target.id === 'grp') { S.group = e.target.checked; lsSet('rb-ui', { group: S.group, sort: S.sort }); renderContent(); }
+    if (e.target.id === 'sort') { S.sort = e.target.value; lsSet('rb-ui', { group: S.group, sort: S.sort }); renderContent(); }
+  });
+  if (PUB) return;
+  document.addEventListener('paste', e => {
+    if ($$('#layer .ov').length) return;
+    const files = [...(e.clipboardData?.files || [])].filter(f => f.type.startsWith('image/'));
+    const typing = /INPUT|TEXTAREA/.test(e.target.tagName);
+    if (files.length) {
+      e.preventDefault(); const r = S.openId && refById(S.openId);
+      if (r && !r.hasImg) { attachImage(r, files[0]).then(() => { if (!isPageLink(r)) toast('Изображение добавлено'); }).catch(er => toast(er.message, 'err')); return; }
+      addFiles(files); return;
+    }
+    if (typing) return;
+    const t = (e.clipboardData?.getData('text') || '').trim();
+    if (/^https?:\/\/\S+$/i.test(t)) { e.preventDefault(); toast('Добавляю ссылку…'); addUrl(t); }
+  });
+  /* перетаскивание карточек на доски */
+  document.addEventListener('dragstart', e => {
+    const c = e.target.closest?.('.card'); if (!c) return;
+    e.dataTransfer.setData('application/x-rb-ref', c.dataset.id); e.dataTransfer.setData('text/plain', refById(c.dataset.id)?.title || ''); e.dataTransfer.effectAllowed = 'copy';
+    c.classList.add('dragging');
+  });
+  document.addEventListener('dragend', e => { e.target.closest?.('.card')?.classList.remove('dragging'); $$('.drop').forEach(x => x.classList.remove('drop')); });
+  const isInternal = e => [...(e.dataTransfer?.types || [])].includes('application/x-rb-ref');
+  const isExternal = e => { const t = [...(e.dataTransfer?.types || [])]; return !isInternal(e) && (t.includes('Files') || t.includes('text/uri-list')); };
+  document.addEventListener('dragenter', e => { if (isExternal(e) && !$$('#layer .ov').length) { dragDepth++; $('#veil').classList.add('show'); } });
+  document.addEventListener('dragleave', e => { if (isExternal(e)) { dragDepth = Math.max(0, dragDepth - 1); if (!dragDepth) hideVeil(); } });
+  document.addEventListener('dragover', e => {
+    if (isInternal(e)) { const t = e.target.closest?.('[data-drop-board]'); $$('.drop').forEach(x => x !== t && x.classList.remove('drop')); if (t) { e.preventDefault(); e.dataTransfer.dropEffect = 'copy'; t.classList.add('drop'); } return; }
+    if (isExternal(e)) e.preventDefault();
+  });
+  document.addEventListener('drop', async e => {
+    if (isInternal(e)) {
+      const t = e.target.closest?.('[data-drop-board]'); if (!t) return; e.preventDefault(); t.classList.remove('drop');
+      const r = refById(e.dataTransfer.getData('application/x-rb-ref')); const b = boardById(t.dataset.dropBoard);
+      if (r && b) { if (r.boards.includes(b.id)) toast(`Уже на доске «${b.name}»`); else { await setBoard(r, b.id, true); toast(`Добавлено на доску «${b.name}»`); } }
+      return;
+    }
+    if (!isExternal(e)) return;
+    e.preventDefault(); hideVeil();
+    const files = [...e.dataTransfer.files];
+    if (files.length) return addFiles(files);
+    const u = (e.dataTransfer.getData('text/uri-list') || e.dataTransfer.getData('text/plain') || '').split('\n').map(s => s.trim()).filter(s => s && !s.startsWith('#'));
+    for (const x of u) await addUrl(x);
+  });
+}
+
+/* ---------- запуск ---------- */
+const packCache = new Map();
+function loadPack(i) { if (!packCache.has(i)) packCache.set(i, fetch(`thumbs/p${i}.json?v=${S.pub.v}`).then(r => r.ok ? r.json() : {}).catch(() => ({}))); return packCache.get(i); }
+async function pubThumb(ref) { if (ref.t !== undefined && ref.t !== null) { const p = await loadPack(ref.t); if (p[ref.id]) return p[ref.id]; } return ref.remote || null; }
+async function boot() {
+  const ui = lsGet('rb-ui', {}); if (typeof ui.group === 'boolean') S.group = ui.group; if (ui.sort) S.sort = ui.sort;
+  if (PUB) {
+    renderTop();
+    try {
+      const res = await fetch('data.json?v=' + Date.now(), { cache: 'no-store' }); if (!res.ok) throw new Error('Файл с данными не найден (' + res.status + ')');
+      const d = await res.json(); S.pub = { v: d.publishedAt, at: d.publishedAt }; S.types = d.types || []; S.boards = d.boards || [];
+      S.refs = (d.refs || []).map(r => normalizeRef({ ...r, hasImg: r.t !== undefined, ai: { status: 'done' } })).sort((a, b) => b.createdAt - a.createdAt);
+    } catch (e) {
+      $('#content').innerHTML = `<div class="empty" style="margin-top:28px"><h3>Не удалось загрузить библиотеку</h3><p>${esc(e.message)}. Если сайт только что опубликован, подождите пару минут и обновите страницу.</p></div>`; renderSide(); bindGlobal(); return;
+    }
+    renderTop(); render(); bindGlobal(); return;
+  }
+  try { await DB.open(); }
+  catch (e) { $('#content').innerHTML = `<div class="empty" style="margin-top:28px"><h3>Браузер не дал открыть базу</h3><p>${esc(e.message || e)}. Откройте файл в Chrome, Edge, Firefox или Safari без приватного режима.</p></div>`; return; }
+  const [refs, boards, types, settings, lastChange] = await Promise.all([DB.all('refs'), DB.all('boards'), DB.get('meta', 'types'), DB.get('meta', 'settings'), DB.get('meta', 'lastChange')]);
+  S.refs = refs.map(normalizeRef).sort((a, b) => b.createdAt - a.createdAt);
+  S.boards = boards.sort((a, b) => a.createdAt - b.createdAt);
+  S.types = types?.length ? types : structuredClone(DEFAULT_TYPES); if (!types) await DB.put('meta', S.types, 'types');
+  S.settings = { ...structuredClone(DEFAULT_SETTINGS), ...(settings || {}), gh: { ...DEFAULT_SETTINGS.gh, ...(settings?.gh || {}) } };
+  S.lastChange = lastChange || 0;
+  navigator.storage?.persist?.().catch(() => {});
+  renderTop(); render(); bindGlobal();
+  for (const r of S.refs) {
+    if (r.shot === 'pending') { addUrlResume(r); continue; }
+    if (r.ai?.status === 'pending' || r.ai?.status === 'running') { r.ai = { status: 'none' }; if (providerReady()) enqueue(r.id); else updateCard(r); }
+  }
+}
+function addUrlResume(r) { shootLink(r); }
+boot();
+</script></body></html>
